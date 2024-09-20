@@ -14,7 +14,7 @@ export class MychartComponent implements OnInit {
 
   constructor() {}
   ngOnInit(): void {
-    const labels = ['Electronics', 'Clothing', 'Groceries', 'Books', 'Toys', 'Furniture', 'Shoes', 'Bags', 'Jewelry', 'Stationery'];
+    const labels = ['mech', 'Clothing', 'Groceries', 'Books', 'Toys', 'Furniture', 'Shoes', 'Bags', 'Jewelry', 'Stationery'];
     const data = [55, 78, 65, 45, 35, 85, 60, 75, 50, 90];
 
     // const id = 'barchart'
