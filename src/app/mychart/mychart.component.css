@@ -1,0 +1,22 @@
+/* Base styling for the chart container and items */
+.chart-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .chart-item {
+    flex: 1 1 45%; /* Take up about 45% of the width, with some margin */
+    position: relative;
+    height: auto;
+    margin: 10px; /* Add 10px space vertically and horizontally between charts */
+  }
+  
+  /* Media query for small screens (mobile devices) */
+  @media (max-width: 768px) {
+    .chart-item {
+      flex: 1 1 100%; /* Stack charts vertically on smaller screens */
+      height: auto;
+    }
+  }
+  
