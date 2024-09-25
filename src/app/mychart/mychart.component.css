@@ -1,22 +1,70 @@
-/* Base styling for the chart container and items */
+body {
+  background: linear-gradient(135deg, #ffafbd, #ffc3a0); /* Gradient background */
+  font-family: 'Arial', sans-serif;
+}
+
+.chart-selection {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+  padding: 20px;
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.select-all {
+  font-size: 1.2em;
+  color: #3E50B4; /* Deep blue color */
+}
+
+.chart-label {
+  margin-right: 15px;
+  font-size: 1.1em;
+  color: #FF6F61; /* Coral color for chart labels */
+}
+
 .chart-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  margin-top: 20px; /* Space above charts */
+  max-height: 10in; /* Set a maximum height */
+  /* overflow-y: auto; Enable vertical scrolling */
+}
+
+.chart-item {
+  flex: 1 1 auto; /* Allow items to grow or shrink */
+  width: 100%; /* Full width of the container */
+  height: 3in; /* Fixed height for each item */
+  margin: 10px 0; /* Add vertical margin for spacing */
+  padding: 20px;
+  background-color: white; /* White background for chart items */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15); /* Shadow effect */
+  transition: transform 0.1s; /* Smooth transition */
+}
+
+
+.chart-item:hover {
+  transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+.chart-item h2 {
+  text-align: center;
+  color: #3E50B4; /* Deep blue color for titles */
+  margin-bottom: 10px; /* Space below title */
+}
+
+canvas {
+  width: 100% !important; /* Responsive canvas width */
+  height: auto !important; /* Responsive canvas height */
+  max-height: 250px; /* Set max height for the canvas */
+}
+
+@media (max-width: 768px) {
   .chart-item {
-    flex: 1 1 45%; /* Take up about 45% of the width, with some margin */
-    position: relative;
-    height: auto;
-    margin: 10px; /* Add 10px space vertically and horizontally between charts */
+    width: 100%; /* Full width on small screens */
+    height: auto; /* Let height adjust automatically */
   }
-  
-  /* Media query for small screens (mobile devices) */
-  @media (max-width: 768px) {
-    .chart-item {
-      flex: 1 1 100%; /* Stack charts vertically on smaller screens */
-      height: auto;
-    }
-  }
-  
+}
+

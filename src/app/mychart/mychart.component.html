@@ -1,23 +1,24 @@
-<div class="row" style="margin-bottom: 20px; display: flex; align-items: center;">
-    <div style="margin-right: 15px;">
+<div class="row chart-selection" style="margin-bottom: 20px;">
+    <div class="select-all">
         <label>
             <input type="checkbox" [(ngModel)]="allChartsSelected" (change)="toggleSelectAll()" />
             Select All Charts
         </label>
     </div>
-    <div *ngFor="let chart of charts" style="margin-right: 15px;">
+    <div *ngFor="let chart of charts" class="chart-label">
         <label>
             <input type="checkbox" [(ngModel)]="chart.selected" (change)="onChartSelection()" />
-            {{ chart.title }}
+            <i *ngIf="getIconClass(chart.title)" [ngClass]="['fas', getIconClass(chart.title), 'fa-lg']"></i>
+            <span *ngIf="!getIconClass(chart.title)">{{ chart.title }}</span>
         </label>
     </div>
 </div>
 
-<div class="chart-container" style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-    <div *ngFor="let chart of charts" class="chart-item" style="flex: 1 1 45%; margin-bottom: 20px;">
-        <ng-container *ngIf="chart.selected">
+<div class="chart-container">
+    <ng-container *ngFor="let chart of charts">
+        <div *ngIf="chart.selected" class="chart-item">
             <h2>{{ chart.title }}</h2>
-            <canvas [id]="chart.id"></canvas>
-        </ng-container>
-    </div>
+            <canvas [id]="chart.id" style="margin: 0 auto;"></canvas>
+        </div>
+    </ng-container>
 </div>
