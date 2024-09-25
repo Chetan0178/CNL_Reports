@@ -1,22 +1,15 @@
-/* Base styling for the chart container and items */
 .chart-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  
-  .chart-item {
-    flex: 1 1 45%; /* Take up about 45% of the width, with some margin */
-    position: relative;
-    height: auto;
-    margin: 10px; /* Add 10px space vertically and horizontally between charts */
-  }
-  
-  /* Media query for small screens (mobile devices) */
-  @media (max-width: 768px) {
-    .chart-item {
-      flex: 1 1 100%; /* Stack charts vertically on smaller screens */
-      height: auto;
-    }
-  }
-  
+  height: 900px;          /* Fixed height for the container */
+  margin-top: 10px;       /* Margin at the top */
+  margin-bottom: 10px;       /* Margin at the top */
+  position: relative;     /* Allows positioning of child elements */
+}
+
+#chartCanvas {
+  width: 200px;           /* Set specific width */
+  height: 200px;          /* Set specific height */
+  position: absolute;     /* Position it relative to the container */
+  top: 20px;              /* Adjust the vertical position */
+  left:0;                /* Align to the left */
+  margin-top: .2in;
+}
