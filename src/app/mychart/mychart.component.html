@@ -1,7 +1,7 @@
 <div class="row chart-selection" style="margin-bottom: 20px;">
     <div class="select-all">
         <label>
-            <input type="checkbox" (change)="toggleSelectAll()" />
+            <input type="checkbox" [(ngModel)]="allChartsSelected" (change)="toggleSelectAll()" />
             Select All Charts
         </label>
     </div>
