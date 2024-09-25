@@ -14,15 +14,26 @@ export class MychartComponent implements OnInit {
 
   // Initialize with bar chart selected by default
   charts = [
-    { title: 'Bar Chart', id: 'barchart', selected: true },
-    { title: 'Pie Chart', id: 'piechart', selected: false },
-    { title: 'Doughnut Chart', id: 'dochart', selected: false },
-    { title: 'Polar Area Chart', id: 'pochart', selected: false },
-    { title: 'Radar Chart', id: 'rochart', selected: false }
-  ];
+    {  title: 'Bar Chart', id: 'barchart', selected: true },
+    {  title: 'Pie Chart', id: 'piechart', selected: false },
+    {  title: 'Doughnut Chart', id: 'dochart', selected: false },
+    {  title: 'Line Chart', id: 'line', selected: false }
 
-  allChartsSelected = false; // To control the "Select All" checkbox
+  ];  allChartsSelected = false; // To control the "Select All" checkbox
 
+  // Mapping of chart titles to Font Awesome icon classes
+  iconMap: { [key: string]: string } = {
+    'Bar Chart': 'fa-solid fa-chart-bar fa-bounce',
+    'Line Chart': 'fas fa-chart-line',
+    'Pie Chart': 'fas fa-chart-pie',
+    'Doughnut Chart' : '',
+    
+    // Add more mappings as needed
+  };
+
+  getIconClass(title: string): string {
+    return this.iconMap[title] || '';
+  }
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
@@ -32,7 +43,7 @@ export class MychartComponent implements OnInit {
 
   // Fetch data from the backend API
   public fetchData() {
-    this.http.get('http://127.0.0.1:8000/api/monthly-sales/').subscribe(
+    this.http.get('http://127.0.0.1:8000/api/report/monthly-sales/').subscribe(
       (resp: any) => {
         this.getJsonValue = resp;
         const labels = resp.month;
@@ -66,6 +77,8 @@ export class MychartComponent implements OnInit {
         return 'polarArea';
       case 'rochart':
         return 'radar';
+      case 'line':
+          return 'line';
       default:
         return 'bar';
     }
@@ -88,17 +101,29 @@ export class MychartComponent implements OnInit {
             label: '# of Sales',
             data: data,
             borderWidth: 1,
-            hoverBackgroundColor: 'skyblue',
-            backgroundColor: ['grey'],
-            borderColor: ['rgba(255, 99, 71, 1)']
+            barThickness: 40,
+            maxBarThickness: 50,
+            hoverBackgroundColor: "rgba(255,99,132,0.4)",
+            hoverBorderColor: "rgba(255,99,132,1)",
+            backgroundColor: "rgba(255,99,132,0.2)",
+            borderColor: "rgba(255,99,132,1)",
           }
         ]
       },
       options: {
-        indexAxis: typename === 'bar' ? 'y' : undefined, // Only for bar charts
+        animations: {
+          tension: {
+            duration: 2000,
+            easing: 'linear',
+            from: 1,
+            to: 0,
+            loop: true
+          }
+        },
+        indexAxis: typename === 'bar' ? 'x' : undefined, // Only for bar charts
         scales: {
           y: { beginAtZero: true }
-        }
+        },
       }
     });
   }
