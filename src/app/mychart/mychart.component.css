@@ -68,3 +68,20 @@ canvas {
   }
 }
 
+button {
+  background-color: transparent;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+button.selected {
+  background-color: #007bff; /* Change this color as needed */
+  color: white;
+}
+
+button:hover {
+  background-color: #f0f0f0; /* Change this color as needed */
+}

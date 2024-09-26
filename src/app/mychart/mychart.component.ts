@@ -18,12 +18,12 @@ export class MychartComponent implements OnInit {
     {  title: 'Pie Chart', id: 'piechart', selected: false },
     {  title: 'Doughnut Chart', id: 'dochart', selected: false },
     {  title: 'Line Chart', id: 'line', selected: false }
-
-  ];  allChartsSelected = false; // To control the "Select All" checkbox
+  ];
+  allChartsSelected = false; // To control the "Select All" button
 
   // Mapping of chart titles to Font Awesome icon classes
   iconMap: { [key: string]: string } = {
-    'Bar Chart': 'fa-solid fa-chart-bar fa-bounce',
+    'Bar Chart': 'fa-solid fa-chart-bar',
     'Line Chart': 'fas fa-chart-line',
     'Pie Chart': 'fas fa-chart-pie',
     'Doughnut Chart' : '',
@@ -78,7 +78,7 @@ export class MychartComponent implements OnInit {
       case 'rochart':
         return 'radar';
       case 'line':
-          return 'line';
+        return 'line';
       default:
         return 'bar';
     }
@@ -89,8 +89,7 @@ export class MychartComponent implements OnInit {
     // Check if a chart already exists, if so, destroy it first
     if (this.chartInstances[id]) {
       this.chartInstances[id]?.destroy();
-    }
-
+    }    
     // Create a new chart and store its instance
     this.chartInstances[id] = new Chart(id, {
       type: typename,
@@ -100,13 +99,15 @@ export class MychartComponent implements OnInit {
           {
             label: '# of Sales',
             data: data,
+            fill : true,
             borderWidth: 1,
-            barThickness: 40,
+            barThickness: 30,
             maxBarThickness: 50,
             hoverBackgroundColor: "rgba(255,99,132,0.4)",
             hoverBorderColor: "rgba(255,99,132,1)",
             backgroundColor: "rgba(255,99,132,0.2)",
             borderColor: "rgba(255,99,132,1)",
+            pointBorderWidth : 5,
           }
         ]
       },
@@ -117,14 +118,14 @@ export class MychartComponent implements OnInit {
             easing: 'linear',
             from: 1,
             to: 0,
-            loop: true
+            loop: false
           }
         },
         indexAxis: typename === 'bar' ? 'x' : undefined, // Only for bar charts
         scales: {
           y: { beginAtZero: true }
         },
-      }
+      }      
     });
   }
 
@@ -139,6 +140,7 @@ export class MychartComponent implements OnInit {
   // Handle chart selection and re-fetch data when the selection changes
   onChartSelection() {
     this.fetchData(); // Re-fetch data and re-render selected charts
+    this.updateSelectAllState(); // Update the "Select All" button state
   }
 
   // Select or deselect all charts
@@ -148,5 +150,16 @@ export class MychartComponent implements OnInit {
       chart.selected = this.allChartsSelected; // Set all charts to selected/deselected
     });
     this.fetchData(); // Re-fetch data and re-render charts based on the selection
+  }
+
+  // New method to update the state of the "Select All" button
+  private updateSelectAllState() {
+    this.allChartsSelected = this.charts.every(chart => chart.selected);
+  }
+
+  // New method to toggle individual chart selection
+  toggleChartSelection(chart: any) {
+    chart.selected = !chart.selected; // Toggle the selected state
+    this.onChartSelection(); // Call the existing method to re-fetch and render charts
   }
 }
