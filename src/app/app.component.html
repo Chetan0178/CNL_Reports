@@ -2,7 +2,9 @@
 
 <nav class="navbar">
   <ul class="nav-list">
-    <li><a routerLink="/chart" routerLinkActive="active">Chart</a></li>
+    <li *ngIf="!isOnChartPage()"><a routerLink="/chart" routerLinkActive="active">Monthly Sale Order</a></li>
+    <li *ngIf="!isOnChartPage()"><a routerLink="/sale_order_trend" routerLinkActive="active">Sale Order Treand</a></li>
+    <li *ngIf="isOnChartPage()"><a routerLink="/" routerLinkActive="active">Home</a></li>
   </ul>
 </nav>
 

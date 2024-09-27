@@ -1,3 +1,21 @@
+.error-label {
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.error-label.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
 body {
   background: linear-gradient(135deg, #ffafbd, #ffc3a0); /* Gradient background */
   font-family: 'Arial', sans-serif;
@@ -86,20 +104,43 @@ button:hover {
   background-color: #f0f0f0; /* Change this color as needed */
 }
 
-.error-label {
-  position: fixed;
-  right: 20px;
-  top: 20px;
-  background-color: rgba(255, 0, 0, 0.8);
-  color: white;
-  padding: 10px;
-  border-radius: 5px;
-  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-  transform: translateX(100%);
-  opacity: 0;
+
+/* ==== */
+/* Style for the select time frame container */
+#time-frame {
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners */
+    border: 1px solid #ccc; /* Border color */
+    background-color: #fff; /* White background */
+    font-size: 1em; /* Font size */
+    color: #3E50B4; /* Deep blue text color */
+    transition: border-color 0.3s ease; /* Smooth transition for border color */
 }
 
-.error-label.show {
-  transform: translateX(0);
-  opacity: 1;
+/* Change border color on focus */
+#time-frame:focus {
+    border-color: #007bff; /* Blue border when focused */
+    outline: none; /* Remove default outline */
+}
+
+/* Style for the label */
+label[for="time-frame"] {
+    font-weight: bold; /* Make label text bold */
+    margin-right: 10px; /* Space between label and select */
+    color: #3E50B4; /* Deep blue color */
+}
+
+/* Style for the message display */
+h2 {
+    color: #3E50B4; /* Deep blue color for messages */
+    text-align: center; /* Center align the message */
+    margin-top: 10px; /* Space above the message */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    #time-frame {
+        width: 100%; /* Full width on small screens */
+        font-size: 0.9em; /* Slightly smaller font size */
+    }
 }
