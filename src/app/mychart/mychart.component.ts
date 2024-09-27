@@ -9,6 +9,7 @@ Chart.register(...registerables);
   styleUrls: ['./mychart.component.css']
 })
 export class MychartComponent implements OnInit {
+  public errorMessage: string | null = null;
   public getJsonValue: any;
   private chartInstances: { [key: string]: Chart | null } = {}; // Track chart instances
 
@@ -59,8 +60,9 @@ export class MychartComponent implements OnInit {
         });
       },
       (error) => {
-        console.error('Error fetching data', error);
-      }
+        this.errorMessage = 'Failed to load data';
+        this.showErrorLabel();
+    }
     );
   }
 
@@ -162,4 +164,14 @@ export class MychartComponent implements OnInit {
     chart.selected = !chart.selected; // Toggle the selected state
     this.onChartSelection(); // Call the existing method to re-fetch and render charts
   }
+
+  private showErrorLabel() {
+    const errorLabel = document.querySelector('.error-label');
+    if (errorLabel) {
+        errorLabel.classList.add('show');
+        setTimeout(() => {
+            errorLabel.classList.remove('show');
+        }, 3000); // Display for 3 seconds
+    }
+}
 }

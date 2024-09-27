@@ -13,7 +13,7 @@ export class SalesOrderTrendComponent implements OnInit {
   public showError: boolean = false; 
   public errorMessage: string | null = null;
   options: string[] = ['Daily', 'Weekly', 'Monthly'];
-  selectedOption: string = 'Daily'; 
+  selectedOption: string = 'Monthly'; 
   message: string = '';
   order_count: any;
   invoices: any;
@@ -45,10 +45,10 @@ export class SalesOrderTrendComponent implements OnInit {
   onOptionChange() {
     switch (this.selectedOption) {
       case 'Daily':
-        this.fetchData('sales-order-trend-daily');
+        this.fetchData('sales-order-trend-daily');  
         break;
       case 'Weekly':
-        this.message = 'Weekly chart';
+        this.fetchData('sales-order-trend-weekly');
         break;
       case 'Monthly':
         this.fetchData('sales-order-trend-monthly'); // Update for Monthly fetch
@@ -71,7 +71,7 @@ export class SalesOrderTrendComponent implements OnInit {
           labels: resp.dates, // Make sure you have correct labels
           datasets: [
             {
-              label: 'Sold Items',
+              label: 'Sales Order',
               data: resp.order_count,
               backgroundColor: 'rgba(66, 122, 212, 0.9)',
               hoverBackgroundColor: "rgba(5, 94, 239, 0.9)",
@@ -93,29 +93,47 @@ export class SalesOrderTrendComponent implements OnInit {
       //   const c_data = {
       //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       //     datasets: [
-            
-      //         {
-      //             week: 'Week 1',
-      //             data: [8, 24, 0, 2, 6, 8, 3, 9, 6, 2, 6, 5],
-      //             backgroundColor: 'rgba(255, 99, 132, 0.6)',
-      //         },
-      //         {
-      //             label: 'Week 2',
-      //             data: [5, 20, 0, 0, 2, 0, 2, 9, 6, 4, 7, 5],
-      //             backgroundColor: 'rgba(54, 162, 235, 0.6)',
-      //         },
-      //         {
-      //             label: 'Week 3',
-      //             data: [2, 16, 14, 0, 3, 2, 8, 5, 8, 6, 9, 10],
-      //             backgroundColor: 'rgba(255, 206, 86, 0.6)',
-      //         },
-      //         {
-      //             label: 'Week 4',
-      //             data: [9, 12, 7, 2, 2, 1, 4, 2, 4, 7, 5, 3],
-      //             backgroundColor: 'rgba(75, 192, 192, 0.6)',
-      //         },
-      //         // Add more weeks as needed
-      //     ]
+      //       {
+      //           "week": "Week 1",
+      //           "data": [3, 15, 7, 8, 6, 2, 4, 1, 9, 0, 5, 12],
+      //           "backgroundColor": "rgba(255, 99, 132, 0.6)"
+      //       },
+      //       {
+      //           "label": "Week 2",
+      //           "data": [1, 10, 14, 5, 0, 8, 9, 3, 6, 12, 7, 4],
+      //           "backgroundColor": "rgba(54, 162, 235, 0.6)"
+      //       },
+      //       {
+      //           "label": "Week 3",
+      //           "data": [2, 13, 11, 9, 5, 6, 7, 8, 10, 1, 4, 3],
+      //           "backgroundColor": "rgba(255, 206, 86, 0.6)"
+      //       },
+      //       {
+      //           "label": "Week 4",
+      //           "data": [8, 2, 6, 0, 4, 3, 5, 12, 11, 7, 14, 0],
+      //           "backgroundColor": "rgba(75, 192, 192, 0.6)"
+      //       },
+      //       {
+      //           "week": "Week 5",
+      //           "data": [12, 8, 5, 22, 3, 19, 10, 15, 27, 0, 4, 11],
+      //           "backgroundColor": "rgba(255, 99, 132, 0.6)"
+      //       },
+      //       {
+      //           "label": "Week 6",
+      //           "data": [4, 18, 7, 30, 14, 2, 5, 9, 18, 6, 20, 25],
+      //           "backgroundColor": "rgba(54, 162, 235, 0.6)"
+      //       },
+      //       {
+      //           "label": "Week 7",
+      //           "data": [10, 12, 20, 2, 5, 7, 6, 11, 19, 3, 15, 9],
+      //           "backgroundColor": "rgba(255, 206, 86, 0.6)"
+      //       },
+      //       {
+      //           "label": "Week 8",
+      //           "data": [22, 11, 5, 3, 2, 4, 15, 6, 27, 19, 14, 8],
+      //           "backgroundColor": "rgba(75, 192, 192, 0.6)"
+      //       }
+      //   ]
       // };
         // Render only the selected charts
         this.charts.forEach((chart) => {
