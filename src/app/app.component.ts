@@ -14,6 +14,8 @@ export class AppComponent {
 
 
   isOnChartPage(): boolean {
-    return this.router.url === '/chart'; // Check if the current URL is '/chart'
+    // return this.router.url === '/chart'; // Check if the current URL is '/chart'
+    return this.router.url === '/chart' || this.router.url === '/sale_order_trend';
+
   }
 }
