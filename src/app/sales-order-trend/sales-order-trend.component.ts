@@ -40,6 +40,7 @@ export class SalesOrderTrendComponent implements OnInit {
 
   ngOnInit(): void {
     this.onOptionChange(); // Fetch initial data
+    console.log('===>',this.onOptionChange())
   }
 
   onOptionChange() {
@@ -178,10 +179,19 @@ export class SalesOrderTrendComponent implements OnInit {
         type: typename,
         data: data,
           options: {
+            animations: (chartId === 'area' || chartId === 'line') ? {
+              tension: {
+                duration: 2000,
+                easing: 'linear',
+                from: 1,
+                to: 0,
+                loop: false
+              }
+            } : false,
           borderWidth: 1,
           borderColor : "rgba(255,99,132,1)",
-          barThickness: 30,
-          maxBarThickness: 50,
+          barThickness: 20,
+          maxBarThickness: 20,
           indexAxis: 'x',
           responsive: true,
           fill: chartId === 'area' ? true : false,
@@ -189,6 +199,14 @@ export class SalesOrderTrendComponent implements OnInit {
           scales: {
             x: {
               stacked: true,
+              // If you want to control the ticks spacing, you can adjust this
+              ticks: {
+                autoSkip: true, // Allow automatic skipping of labels
+                maxTicksLimit: 24, // Limit the maximum number of ticks displayed
+                    // You can use the following if you want to control intervals:
+                    // stepSize: 1, // Set the interval between ticks (only works for numerical labels)
+
+            }
             },
             y: {
               stacked: true,
@@ -197,7 +215,7 @@ export class SalesOrderTrendComponent implements OnInit {
           plugins: {
             title: {
               display: true,
-              text: 'Total Sold Items Per Month by Week',
+              text: '',
             },
             legend: {
               position: 'top',
