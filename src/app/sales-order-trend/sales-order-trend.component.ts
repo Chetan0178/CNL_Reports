@@ -40,7 +40,6 @@ export class SalesOrderTrendComponent implements OnInit {
 
   ngOnInit(): void {
     this.onOptionChange(); // Fetch initial data
-    console.log('===>',this.onOptionChange())
   }
 
   onOptionChange() {
@@ -68,7 +67,7 @@ export class SalesOrderTrendComponent implements OnInit {
         this.errorMessage = null; 
         const labels = resp.month;
 
-        const c_data = {
+        const chart_data = {
           labels: resp.dates, // Make sure you have correct labels
           datasets: [
             {
@@ -91,7 +90,7 @@ export class SalesOrderTrendComponent implements OnInit {
             },
           ]
         };
-      //   const c_data = {
+      //   const chart_data = {
       //     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
       //     datasets: [
       //       {
@@ -139,7 +138,7 @@ export class SalesOrderTrendComponent implements OnInit {
         // Render only the selected charts
         this.charts.forEach((chart) => {
           if (chart.selected) {
-            this.createChart(chart.id, this.getChartType(chart.id), c_data);
+            this.createChart(chart.id, this.getChartType(chart.id), chart_data);
           } else {
             this.destroyChart(chart.id);
           }
