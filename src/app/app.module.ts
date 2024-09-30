@@ -7,12 +7,14 @@ import { MychartComponent } from './mychart/mychart.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { SalesOrderTrendComponent } from './sales-order-trend/sales-order-trend.component';
+import { SalesPerformanceByCustomerComponent } from './sales-performance-by-customer/sales-performance-by-customer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MychartComponent,
-    SalesOrderTrendComponent
+    SalesOrderTrendComponent,
+    SalesPerformanceByCustomerComponent
   ],
   imports: [
     BrowserModule,

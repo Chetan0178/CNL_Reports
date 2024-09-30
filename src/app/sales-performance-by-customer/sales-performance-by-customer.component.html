@@ -1,0 +1,28 @@
+<div>
+    <h2></h2>
+</div>
+
+<div class="row chart-selection" style="margin-bottom: 20px;">
+    <div class="select-all">
+        <button (click)="toggleSelectAll()">
+            {{ allChartsSelected ? 'Deselect All Charts' : 'Select All Charts' }}
+        </button>
+    </div>
+    <div *ngFor="let chart of charts" class="chart-label">
+        <button [ngClass]="{'selected': chart.selected}" (click)="toggleChartSelection(chart)">
+            <i *ngIf="getIconClass(chart.title)" [ngClass]="['fas', getIconClass(chart.title), 'fa-lg']"></i>
+            <span *ngIf="!getIconClass(chart.title)">{{ chart.title }}</span>
+        </button>
+    </div>
+</div>
+
+<div class="chart-container">
+    <ng-container *ngFor="let chart of charts">
+        <div *ngIf="chart.selected" class="chart-item">
+            <h2>{{ chart.title }}</h2>
+            <canvas [id]="chart.id" style="margin: 0 auto;"></canvas>
+        </div>
+    </ng-container>
+</div>
+
+<div *ngIf="errorMessage" class="error-label">{{ errorMessage }}</div>
