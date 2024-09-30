@@ -15,19 +15,22 @@ export class SalesPerformanceByCustomerComponent implements OnInit {
 
   // Only Bar Chart and Radar Chart options
   charts = [
-    { title: 'Bar Chart', id: 'bar', selected: true },  // Default selection
-    { title: 'Radar Chart', id: 'radar', selected: false }
+    // { title: 'Bar Chart', id: 'bar', selected: true },  // Default selection
+    { title: 'Stacked Bar Chart', id: 'stacked-bar', selected: true },  // Default selection
+    { title: 'Radar Chart', id: 'radar-type', selected: false },
+    { title: 'Bar Chart', id:'hori-bar', selected: false}
   ];
 
   allChartsSelected = false;  // Property to handle select/deselect all
   currentChartType = 'bar';   // Default to Stacked Bar chart
 
   iconMap: { [key: string]: string } = {
-    'Bar Chart': 'fa-solid fa-chart-column',
-    'Radar Chart': 'fa-solid fa-chart-pie'
+    'Stacked Bar Chart': 'fa-solid fa-chart-column',
+    'Radar Chart': 'fa-solid fa-chart-pie',
+    'Bar Chart' : 'fa-solid fa-chart-bar'
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.fetchData();
@@ -42,19 +45,19 @@ export class SalesPerformanceByCustomerComponent implements OnInit {
         const prod_category_list = resp.prod_category_list;
         const price_list = resp.price_list;
 
-        const c_data = {
+        const chart_data = {
           labels: cust_name_list,
           datasets: prod_category_list.map((category: string, index: number) => ({
             label: category,
             data: price_list[index],
-            backgroundColor: this.getRandomColor()
+            backgroundColor: this.getRandomLightColor()
           }))
         };
 
         // Render only the selected charts
         this.charts.forEach((chart) => {
           if (chart.selected) {
-            this.createChart(chart.id, this.getChartType(chart.id), c_data);
+            this.createChart(chart.id, this.getChartType(chart.id), chart_data);
           } else {
             this.destroyChart(chart.id);  // Ensure we destroy any existing chart
           }
@@ -67,14 +70,18 @@ export class SalesPerformanceByCustomerComponent implements OnInit {
     );
   }
 
-  // Random color generator for each dataset
-  getRandomColor(): string {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
+  // Random light color generator for each dataset
+  getRandomLightColor(): string {
+    const r = Math.floor(Math.random() * 128) + 128; // Generate red between 128 and 255
+    const g = Math.floor(Math.random() * 128) + 128; // Generate green between 128 and 255
+    const b = Math.floor(Math.random() * 128) + 128; // Generate blue between 128 and 255
+
+    return `#${this.componentToHex(r)}${this.componentToHex(g)}${this.componentToHex(b)}`;
+  }
+  // Helper function to convert a component to a hex string
+  private componentToHex(c: number): string {
+    const hex = c.toString(16);
+    return hex.length === 1 ? '0' + hex : hex; // Ensure two characters for each component
   }
 
   // Function to toggle between chart selections
@@ -99,9 +106,12 @@ export class SalesPerformanceByCustomerComponent implements OnInit {
   // Function to get chart type based on id
   getChartType(id: string) {
     switch (id) {
-      case 'radar':
+      case 'radar-type':
         return 'radar';
-      case 'bar':
+      case 'stacked-bar':
+        return 'bar';
+        case 'hori-bar':
+          return 'bar';
       default:
         return 'bar';
     }
@@ -114,6 +124,8 @@ export class SalesPerformanceByCustomerComponent implements OnInit {
 
   // Function to create a chart
   createChart(chartId: string, typename: any, data: any) {
+
+
     this.destroyChart(chartId);  // Destroy existing chart instance if any
 
     const canvas = document.getElementById(chartId) as HTMLCanvasElement;
@@ -134,9 +146,10 @@ export class SalesPerformanceByCustomerComponent implements OnInit {
       options: {
         borderWidth: 1,
         borderColor: "rgba(255,99,132,1)",
-        barThickness: 20,
+        barThickness: (chartId === 'hori-bar') ? 5 : 20,
         maxBarThickness: 20,
         responsive: true,
+        indexAxis: (chartId === 'hori-bar') ? 'y' : 'x',
         scales: {
           x: {
             stacked: typename === 'bar',
