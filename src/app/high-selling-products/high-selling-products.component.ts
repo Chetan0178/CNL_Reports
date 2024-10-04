@@ -208,14 +208,16 @@ export class HighSellingProductsComponent implements OnInit {
   public chartData: any = {};
 
   charts = [
-    { title: 'Line Chart',  id: 'line',  selected: true },
-    { title: 'Bar Chart',   id: 'bar',   selected: false }
+    { title: 'Line Chart',  id: 'line',  selected: false },
+    { title: 'Bar Chart',   id: 'bar',   selected: false },
+    { title: 'Radar Chart',   id: 'radar',   selected: false }
   ];
   allChartsSelected = false;
 
   iconMap: { [key: string]: string } = {
     'Line Chart':  'fas fa-chart-line',
     'Bar Chart':   'fas fa-solid fa-chart-column',
+    'Radar chart' : 'radar'
   };
 
   constructor(private http: HttpClient) {}
@@ -234,7 +236,7 @@ export class HighSellingProductsComponent implements OnInit {
         this.fetchData('sales-order-trend-weekly');
         break;
       case 'Monthly':
-        this.fetchData('s3_query'); 
+        this.fetchData('High-Selling-Products'); 
         break;
       default:
         this.message = '';
@@ -251,7 +253,7 @@ export class HighSellingProductsComponent implements OnInit {
       },
       (error) => {
         this.errorMessage = 'Error fetching data';
-        console.error(error);
+        this.showErrorLabel();
       }
     );
   }
@@ -322,6 +324,8 @@ private componentToHex(c: number): string {
         return 'line';
       case 'bar':
         return 'bar';
+      case 'radar':
+          return 'radar';
       default:
         return 'line';
     }
@@ -393,5 +397,15 @@ private componentToHex(c: number): string {
   // Get the icon class for the charts
   getIconClass(title: string): string {
     return this.iconMap[title] || '';
+  }
+
+  private showErrorLabel() {
+    const errorLabel = document.querySelector('.error-label');
+    if (errorLabel) {
+      errorLabel.classList.add('show');
+      setTimeout(() => {
+        errorLabel.classList.remove('show');
+      }, 3000);  // Display for 3 seconds
+    }
   }
 }
