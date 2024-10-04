@@ -191,6 +191,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { Chart, ChartType, ChartDataset } from 'chart.js';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-high-selling-products',
@@ -204,166 +205,20 @@ export class HighSellingProductsComponent implements OnInit {
   selectedOption: string = 'Monthly';
   message: string = '';
   private chartInstances: { [key: string]: Chart | null } = {};
-  public chartData: any = {}; // Declare chartData
+  public chartData: any = {};
 
   charts = [
-    { title: 'Line Chart',  id: 'line',  selected: true }, // Default selection
-    { title: 'Area Chart',  id: 'area',  selected: false },
-    { title: 'Spine Chart', id: 'spine', selected: false },
+    { title: 'Line Chart',  id: 'line',  selected: true },
     { title: 'Bar Chart',   id: 'bar',   selected: false }
   ];
   allChartsSelected = false;
 
   iconMap: { [key: string]: string } = {
     'Line Chart':  'fas fa-chart-line',
-    'Area Chart':  'fas fa-chart-area',
-    'Spine Chart': 'fas fa-chart-line',
     'Bar Chart':   'fas fa-solid fa-chart-column',
   };
 
-  // Static data to be used
-  private c_data = {
-    "months": [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December"
-    ],
-   "product_names": [
-        "Car GPS Navigator",
-        "Car Vacuum Cleaner",
-        "Dash Cam",
-        "Laptop",
-        "Microwave Oven",
-        "Refrigerator",
-        "Smartphone",
-        "Washing Machine"
-    ],
-    "sales": [
-        [
-            50.0,
-            50.0,
-            265.0,
-            230.0,
-            210.0,
-            250.0,
-            290.0,
-            310.0,
-            340.0,
-            360.0,
-            390.0,
-            440.0
-        ],
-        [
-            80.0,
-            80.0,
-            245.0,
-            180.0,
-            220.0,
-            230.0,
-            240.0,
-            300.0,
-            320.0,
-            350.0,
-            400.0,
-            450.0
-        ],
-        [
-            60.0,
-            60.0,
-            315.0,
-            210.0,
-            240.0,
-            300.0,
-            310.0,
-            340.0,
-            350.0,
-            0,
-            410.0,
-            460.0
-        ],
-        [
-            190.0,
-            129.0,
-            335.0,
-            220.0,
-            250.0,
-            330.0,
-            300.0,
-            350.0,
-            360.0,
-            370.0,
-            380.0,
-            420.0
-        ],
-        [
-            103.0,
-            109.0,
-            325.0,
-            260.0,
-            270.0,
-            290.0,
-            250.0,
-            320.0,
-            310.0,
-            330.0,
-            370.0,
-            430.0
-        ],
-        [
-            96.0,
-            96.0,
-            268.0,
-            150.0,
-            160.0,
-            210.0,
-            260.0,
-            280.0,
-            330.0,
-            320.0,
-            390.0,
-            440.0
-        ],
-        [
-            159.0,
-            169.0,
-            320.0,
-            190.0,
-            300.0,
-            310.0,
-            320.0,
-            330.0,
-            340.0,
-            360.0,
-            400.0,
-            450.0
-        ],
-        [
-            112.0,
-            112.0,
-            384.0,
-            240.0,
-            190.0,
-            280.0,
-            270.0,
-            290.0,
-            300.0,
-            310.0,
-            350.0,
-            410.0
-        ]
-    ]
-  };
-
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.onOptionChange(); // Fetch initial data
@@ -373,34 +228,48 @@ export class HighSellingProductsComponent implements OnInit {
   onOptionChange() {
     switch (this.selectedOption) {
       case 'Daily':
+        this.fetchData('sales-order-trend-daily');
+        break;
       case 'Weekly':
+        this.fetchData('sales-order-trend-weekly');
+        break;
       case 'Monthly':
-        this.useStaticData(); // Use the static data instead of fetching from an API
+        this.fetchData('s3_query'); 
         break;
       default:
         this.message = '';
     }
-
-    // Delay the chart rendering to ensure canvas elements are in the DOM
-    setTimeout(() => {
-      this.renderCharts();  // Create and render charts
-    }, 0);
   }
 
-  // Use static data and render charts based on selection
-  private useStaticData() {
-    const resp = this.c_data; // Use static data directly
+  // Fetch data from the API
+  public fetchData(endpoint: string) {
+    const apiUrl = `http://127.0.0.1:8000/api/report/${endpoint}`;
+    this.http.get(apiUrl).subscribe(
+      (API_resp: any) => {
+        this.errorMessage = null; 
+        this.useStaticData(API_resp); // Pass API data to useStaticData
+      },
+      (error) => {
+        this.errorMessage = 'Error fetching data';
+        console.error(error);
+      }
+    );
+  }
+
+  // Use API data and render charts based on selection
+  private useStaticData(API_resp: any) {
+    const resp = API_resp; // Use API response directly
     this.errorMessage = null; 
 
-    // Convert the static data to datasets for Chart.
-    console.log("  console.log(this.buildDatasets(resp))===>", this.buildDatasets(resp))
     const chart_data = {    
       labels: resp.months,  // X-axis labels (months)
       datasets: this.buildDatasets(resp) // Build datasets dynamically for each product
     };
 
-    // Save the data for rendering after delay
-    this.chartData = chart_data; // Now this.chartData is defined
+    this.chartData = chart_data;
+    setTimeout(() => {
+      this.renderCharts();  // Create and render charts
+    }, 0);
   }
 
   // Create and render the selected charts
@@ -415,15 +284,15 @@ export class HighSellingProductsComponent implements OnInit {
   }
 
   // Dynamically build datasets for multiple products
-  buildDatasets(resp: any): ChartDataset<'line'>[] { // Specify the return type
-    const datasets: ChartDataset<'line'>[] = []; // Explicitly define the type
+  buildDatasets(resp: any): ChartDataset<'line'>[] {
+    const datasets: ChartDataset<'line'>[] = [];
 
     resp.product_names.forEach((productName: string, index: number) => {
       datasets.push({
-        label: productName,  // Use the product name as the label
-        data: resp.sales[index],  // Assuming sales data is an array of arrays (one per product)
-        backgroundColor: this.getRandomColor(),  // Dynamic color for each product
-        borderColor: this.getRandomColor(),
+        label: productName,
+        data: resp.sales[index],
+        backgroundColor: this.getRandomLightColor(),
+        borderColor: this.getRandomLightColor(),
         borderWidth: 1
       });
     });
@@ -432,40 +301,41 @@ export class HighSellingProductsComponent implements OnInit {
   }
 
   // Generate random colors for each dataset
-  getRandomColor() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
+// Random light color generator for each dataset
+getRandomLightColor(): string {
+  const r = Math.floor(Math.random() * 128) + 128; // Generate red between 128 and 255
+  const g = Math.floor(Math.random() * 128) + 128; // Generate green between 128 and 255
+  const b = Math.floor(Math.random() * 128) + 128; // Generate blue between 128 and 255
+
+  return `#${this.componentToHex(r)}${this.componentToHex(g)}${this.componentToHex(b)}`;
+}
+// Helper function to convert a component to a hex string
+private componentToHex(c: number): string {
+  const hex = c.toString(16);
+  return hex.length === 1 ? '0' + hex : hex; // Ensure two characters for each component
+}
 
   // Determine the Chart.js type for the given chart
   getChartType(id: string): ChartType {
     switch (id) {
-      case 'area':
-        return 'line'; // 'Area' is a filled line chart in Chart.js
       case 'line':
         return 'line';
-      case 'spine':
-        return 'line'; // 'Spine' is also a line chart
       case 'bar':
         return 'bar';
       default:
-        return 'line'; // Fallback to line
+        return 'line';
     }
   }
 
   // Create the chart instance dynamically
   createChart(chartId: string, chartType: ChartType, data: any) {
-    this.destroyChart(chartId); // Destroy any existing chart with this ID
+    this.destroyChart(chartId);
 
     const canvas = document.getElementById(chartId) as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d');
     if (ctx) {
       this.chartInstances[chartId] = new Chart(ctx, {
-        type: chartType,  // Dynamic chart type
+        type: chartType,
         data: data,
         options: {
           responsive: true,
@@ -473,18 +343,18 @@ export class HighSellingProductsComponent implements OnInit {
             x: {
               stacked: false,
               ticks: {
-                autoSkip: true,  // Automatically skip labels if too many
-                maxTicksLimit: 12, // Limit the number of labels
+                autoSkip: true,
+                maxTicksLimit: 12,
               }
             },
             y: {
-              stacked: false, // Can adjust based on use case
+              stacked: false,
             },
           },
           plugins: {
             title: {
               display: true,
-              text: chartId.replace(/-/, ' ') + ' - Sales Data',  // Dynamic title
+              text: chartId.replace(/-/, ' ') + ' - Sales Data',
             },
             legend: {
               position: 'top',
@@ -511,13 +381,13 @@ export class HighSellingProductsComponent implements OnInit {
     this.charts.forEach((chart) => {
       chart.selected = this.allChartsSelected;
     });
-    this.onOptionChange(); // Re-fetch data based on selection
+    this.onOptionChange(); 
   }
 
   // Toggle selection for individual charts
   toggleChartSelection(chart: any) {
     chart.selected = !chart.selected;
-    this.onOptionChange(); // Re-fetch data and re-render selected charts
+    this.onOptionChange();
   }
 
   // Get the icon class for the charts
