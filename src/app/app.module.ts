@@ -8,19 +8,22 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { SalesOrderTrendComponent } from './sales-order-trend/sales-order-trend.component';
 import { SalesPerformanceByCustomerComponent } from './sales-performance-by-customer/sales-performance-by-customer.component';
+import { HighSellingProductsComponent } from './high-selling-products/high-selling-products.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MychartComponent,
     SalesOrderTrendComponent,
-    SalesPerformanceByCustomerComponent
+    SalesPerformanceByCustomerComponent,
+    HighSellingProductsComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]
