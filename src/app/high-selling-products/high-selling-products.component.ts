@@ -201,7 +201,7 @@ import { HttpClient } from '@angular/common/http';
 export class HighSellingProductsComponent implements OnInit {
   public showError: boolean = false;
   public errorMessage: string | null = null;
-  options: string[] = ['Daily', 'Weekly', 'Monthly'];
+  options: string[] = [ 'Yearly', 'Monthly', 'Weekly'];
   selectedOption: string = 'Monthly';
   message: string = '';
   private chartInstances: { [key: string]: Chart | null } = {};
@@ -229,14 +229,14 @@ export class HighSellingProductsComponent implements OnInit {
   // Handle option change for Daily, Weekly, Monthly data
   onOptionChange() {
     switch (this.selectedOption) {
-      case 'Daily':
-        this.fetchData('sales-order-trend-daily');
-        break;
-      case 'Weekly':
-        this.fetchData('sales-order-trend-weekly');
+      case 'Yearly':
+        this.fetchData('High-Selling-Products-yearly');
         break;
       case 'Monthly':
-        this.fetchData('High-Selling-Products'); 
+        this.fetchData('High-Selling-Products-monthly'); 
+        break;
+      case 'Weekly':
+        this.fetchData('High-Selling-Products-weekly');
         break;
       default:
         this.message = '';
@@ -264,7 +264,7 @@ export class HighSellingProductsComponent implements OnInit {
     this.errorMessage = null; 
 
     const chart_data = {    
-      labels: resp.months,  // X-axis labels (months)
+      labels: resp.label,  // X-axis labels (months)
       datasets: this.buildDatasets(resp) // Build datasets dynamically for each product
     };
 
@@ -292,7 +292,7 @@ export class HighSellingProductsComponent implements OnInit {
     resp.product_names.forEach((productName: string, index: number) => {
       datasets.push({
         label: productName,
-        data: resp.sales[index],
+        data: resp.sales_data[index],
         backgroundColor: this.getRandomLightColor(),
         borderColor: this.getRandomLightColor(),
         borderWidth: 1
