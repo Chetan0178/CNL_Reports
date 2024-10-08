@@ -57,32 +57,6 @@ export class MychartComponent implements OnInit {
     }
   }
 
-  public fetchData(endpoint: string) {
-    const apiUrl = `http://127.0.0.1:8000/api/report/${endpoint}`;
-
-    this.http.get(apiUrl).subscribe(
-      (resp: any) => {
-        this.errorMessage = null; 
-        const labels = [resp.label]; // Changed to create an array of labels <<<<<========
-        const data = [resp.revenue]; // Changed to create an array of data <<<<<========
-        console.log("=====>>>>>>>>", labels, data);
-        
-        // Render only the selected charts
-        this.charts.forEach((chart) => {
-          if (chart.selected) {
-            this.createChart(chart.id, this.getChartType(chart.id), labels, data);
-          } else {
-            this.destroyChart(chart.id);
-          }
-        });
-      },
-      (error) => {
-        this.errorMessage = 'Failed to load data';
-        this.showErrorLabel();
-      }
-    );
-}
-
    // This method gets the chart type based on the chart ID
    getChartType(id: string) {
     switch (id) {
@@ -100,31 +74,64 @@ export class MychartComponent implements OnInit {
   }
 
   // Ensure that the canvas element with the correct ID exists in your HTML
-createChart(chartId: string, typename: any, labels: string[], data: number[]) { // Ensure types for clarity <<<<<========
+  public fetchData(endpoint: string) {
+    const apiUrl = `http://127.0.0.1:8000/api/report/${endpoint}`;
+
+    this.http.get(apiUrl).subscribe(
+      (resp: any) => {
+        this.errorMessage = null;
+
+        let labels: string[];
+        let data: number[];
+
+        if (Array.isArray(resp.label) && Array.isArray(resp.revenue)) {
+            labels = resp.label;
+            data = resp.revenue;
+        } else {
+            labels = [resp.label];
+            data = [resp.revenue];
+        }
+
+        console.log("=====>>>>>>>>", labels, data);
+        
+        this.charts.forEach((chart) => {
+          if (chart.selected) {
+            this.createChart(chart.id, this.getChartType(chart.id), labels, data);
+          } else {
+            this.destroyChart(chart.id);
+          }
+        });
+      },
+      (error) => {
+        this.errorMessage = 'Failed to load data';
+        this.showErrorLabel();
+      }
+    );
+}
+
+createChart(chartId: string, typename: any, labels: string[], data: number[]) {
     this.destroyChart(chartId); // Destroy existing chart instance if any
   
     const canvas = document.getElementById(chartId) as HTMLCanvasElement;
-    const ctx = canvas?.getContext('2d'); // Use optional chaining
-    if (ctx) { // Check if ctx is not null
+    const ctx = canvas?.getContext('2d');
+    if (ctx) {
       this.chartInstances[chartId] = new Chart(ctx, {
         type: typename,
-        data:  {
+        data: {
           labels: labels,
-          datasets: [
-            {
-              label: '# of Sales',
-              data: data,
-              fill: true,
-              borderWidth: 1,
-              barThickness: 30,
-              maxBarThickness: 50,
-              hoverBackgroundColor: "rgba(255,99,132,0.4)",
-              hoverBorderColor: "rgba(255,99,132,1)",
-              backgroundColor: "rgba(255,99,132,0.2)",
-              borderColor: "rgba(255,99,132,1)",
-              pointBorderWidth: 5,
-            }
-          ]
+          datasets: [{
+            label: '# of Sales',
+            data: data,
+            fill: true,
+            borderWidth: 1,
+            barThickness: 30,
+            maxBarThickness: 50,
+            hoverBackgroundColor: "rgba(255,99,132,0.4)",
+            hoverBorderColor: "rgba(255,99,132,1)",
+            backgroundColor: "rgba(255,99,132,0.2)",
+            borderColor: "rgba(255,99,132,1)",
+            pointBorderWidth: 5,
+          }]
         },
         options: {
           animations: (chartId === 'area' || chartId === 'line') ? {
@@ -171,6 +178,7 @@ createChart(chartId: string, typename: any, labels: string[], data: number[]) { 
       console.error(`Failed to get context for chart with id: ${chartId}`);
     }
 }
+
 
   
 
