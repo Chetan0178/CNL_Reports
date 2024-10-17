@@ -165,7 +165,6 @@ export class SalesPerformanceByCustomerComponent implements OnInit {
         plugins: {
           title: {
             display: true,
-            text: `${chartId === 'radar' ? 'Radar' : 'Bar'} Chart - Sales Performance by Customer`
           },
           legend: {
             position: 'top'

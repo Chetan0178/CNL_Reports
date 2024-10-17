@@ -12,7 +12,7 @@ Chart.register(...registerables);
 export class SalesOrderTrendComponent implements OnInit {
   public showError: boolean = false; 
   public errorMessage: string | null = null;
-  options: string[] = ['Daily', 'Weekly', 'Monthly'];
+  options: string[] = ['Weekly', 'Monthly'];
   selectedOption: string = 'Monthly'; 
   message: string = '';
   order_count: any;
@@ -44,9 +44,9 @@ export class SalesOrderTrendComponent implements OnInit {
 
   onOptionChange() {
     switch (this.selectedOption) {
-      case 'Daily':
-        this.fetchData('sales-order-trend-daily');  
-        break;
+      // case 'Daily':
+      //   this.fetchData('sales-order-trend-daily');  
+      //   break;
       case 'Weekly':
         this.fetchData('sales-order-trend-weekly');
         break;

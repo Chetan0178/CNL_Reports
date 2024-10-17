@@ -11,7 +11,7 @@ Chart.register(...registerables);
 export class MychartComponent implements OnInit {
   public showError: boolean = false; 
   public errorMessage: string | null = null;
-  options: string[] = ['Today', 'yesterday', 'Last 3 Months Revenue'];
+  options: string[] = ['Today', 'yesterday', 'Last 7 Days Revenue','Current Month Revenue','Last Month Revenue', 'Last 3 Months Revenue', 'Last 6 Months Revenue','Current Quarter Revenue', 'Year to Current Date Revenue','Last 12 Months' ];
   selectedOption: string = 'Today'; 
   message: string = '';
   order_count: any;
@@ -23,17 +23,17 @@ export class MychartComponent implements OnInit {
   charts = [
     // { title: 'Line Chart',  id: 'line',  selected: true }, // Set default selection
     // { title: 'Area Chart',  id: 'area',  selected: false },
-    // { title: 'Spine Chart', id: 'spine', selected: false },
-    { title: 'Bar Chart',   id: 'bar',   selected: false }
+    { title: 'Bar Chart',   id: 'bar',   selected: false },
+    { title: 'Horizontal Bar Chart', id: 'Horizontal Bar', selected: false },
   ];
   allChartsSelected = false;
 
   iconMap: { [key: string]: string } = {
     // 'Line Chart':  'fas fa-chart-line',
     // 'Area Chart':  'fas fa-chart-area',
-    // 'Spine Chart': 'fas fa-chart-line',
     'Bar Chart':   'fa-solid fa-chart-column',
-  };
+    'Horizontal Bar Chart': 'fa-regular fa-chart-bar',   
+   };
 
   constructor(private http: HttpClient) {}
 
@@ -47,10 +47,31 @@ export class MychartComponent implements OnInit {
         this.fetchData('todays_revenue');  
         break;
       case 'yesterday':
-        this.fetchData('yesterday_revenue');
+        this.fetchData('yesterday_revenue');   
+        break;
+      case 'Last 7 Days Revenue':
+        this.fetchData('last_7_days_revenue');         
+         break;
+      case 'Current Month Revenue':
+        this.fetchData('current_month_revenue');      
+        break;
+      case 'Last Month Revenue':
+        this.fetchData('last_month_revenue');      
         break;
       case 'Last 3 Months Revenue':
-        this.fetchData('last_3_months_revenue'); // Update for Monthly fetch
+        this.fetchData('last_3_months_revenue');     
+        break;
+      case 'Last 6 Months Revenue':
+        this.fetchData('last_6_month_revenue');           
+        break;
+      case 'Current Quarter Revenue':
+        this.fetchData('current_quarter_revenue');      
+        break;
+      case 'Year to Current Date Revenue':
+        this.fetchData('year_to_date');      
+        break;
+      case 'Last 12 Months':
+        this.fetchData('year_to_last_month');      
         break;
       default:
         this.message = '';
@@ -124,7 +145,7 @@ createChart(chartId: string, typename: any, labels: string[], data: number[]) {
             data: data,
             fill: true,
             borderWidth: 1,
-            barThickness: 30,
+            barThickness: chartId == 'Horizontal Bar' ? 2 : 30,
             maxBarThickness: 50,
             hoverBackgroundColor: "rgba(255,99,132,0.4)",
             hoverBorderColor: "rgba(255,99,132,1)",
@@ -147,7 +168,7 @@ createChart(chartId: string, typename: any, labels: string[], data: number[]) {
           borderColor: "rgba(255,99,132,1)",
           barThickness: 20,
           maxBarThickness: 20,
-          indexAxis: 'x',
+          indexAxis: chartId == 'Horizontal Bar' ? 'y':'x',
           responsive: true,
           fill: chartId === 'area',
           tension: (chartId === 'area' || chartId === 'spine') ? 0.4 : 0,
