@@ -9,129 +9,200 @@ Chart.register(...registerables);
   styleUrls: ['./mychart.component.css']
 })
 export class MychartComponent implements OnInit {
+  public showError: boolean = false; 
   public errorMessage: string | null = null;
+  options: string[] = ['Today', 'yesterday', 'Last 7 Days Revenue','Current Month Revenue','Last Month Revenue', 'Last 3 Months Revenue', 'Last 6 Months Revenue','Current Quarter Revenue', 'Year to Current Date Revenue','Last 12 Months' ];
+  selectedOption: string = 'Today'; 
+  message: string = '';
+  order_count: any;
+  invoices: any;
+  dates: any;
   public getJsonValue: any;
-  private chartInstances: { [key: string]: Chart | null } = {}; // Track chart instances
+  private chartInstances: { [key: string]: Chart | null } = {};
 
-  // Initialize with bar chart selected by default
   charts = [
-    {  title: 'Bar Chart', id: 'barchart', selected: true },
-    {  title: 'Pie Chart', id: 'piechart', selected: false },
-    {  title: 'Doughnut Chart', id: 'dochart', selected: false },
-    {  title: 'Line Chart', id: 'line', selected: false }
+    // { title: 'Line Chart',  id: 'line',  selected: true }, // Set default selection
+    // { title: 'Area Chart',  id: 'area',  selected: false },
+    { title: 'Bar Chart',   id: 'bar',   selected: false },
+    { title: 'Horizontal Bar Chart', id: 'Horizontal Bar', selected: false },
   ];
-  allChartsSelected = false; // To control the "Select All" button
+  allChartsSelected = false;
 
-  // Mapping of chart titles to Font Awesome icon classes
   iconMap: { [key: string]: string } = {
-    'Bar Chart': 'fa-solid fa-chart-bar',
-    'Line Chart': 'fas fa-chart-line',
-    'Pie Chart': 'fas fa-chart-pie',
-    'Doughnut Chart' : '',
-    
-    // Add more mappings as needed
-  };
+    // 'Line Chart':  'fas fa-chart-line',
+    // 'Area Chart':  'fas fa-chart-area',
+    'Bar Chart':   'fa-solid fa-chart-column',
+    'Horizontal Bar Chart': 'fa-regular fa-chart-bar',   
+   };
 
-  getIconClass(title: string): string {
-    return this.iconMap[title] || '';
-  }
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    // Initially, fetch data for the bar chart
-    this.fetchData();
+    this.onOptionChange(); // Fetch initial data
   }
 
-  // Fetch data from the backend API
-  public fetchData() {
-    this.http.get('http://127.0.0.1:8000/api/report/monthly-sales/').subscribe(
-      (resp: any) => {
-        this.getJsonValue = resp;
-        const labels = resp.month;
-        const data = resp.sales_count;
+  onOptionChange() {
+    switch (this.selectedOption) {
+      case 'Today':
+        this.fetchData('todays_revenue');  
+        break;
+      case 'yesterday':
+        this.fetchData('yesterday_revenue');   
+        break;
+      case 'Last 7 Days Revenue':
+        this.fetchData('last_7_days_revenue');         
+         break;
+      case 'Current Month Revenue':
+        this.fetchData('current_month_revenue');      
+        break;
+      case 'Last Month Revenue':
+        this.fetchData('last_month_revenue');      
+        break;
+      case 'Last 3 Months Revenue':
+        this.fetchData('last_3_months_revenue');     
+        break;
+      case 'Last 6 Months Revenue':
+        this.fetchData('last_6_month_revenue');           
+        break;
+      case 'Current Quarter Revenue':
+        this.fetchData('current_quarter_revenue');      
+        break;
+      case 'Year to Current Date Revenue':
+        this.fetchData('year_to_date');      
+        break;
+      case 'Last 12 Months':
+        this.fetchData('year_to_last_month');      
+        break;
+      default:
+        this.message = '';
+    }
+  }
 
-        // Render only the selected charts
+   // This method gets the chart type based on the chart ID
+   getChartType(id: string) {
+    switch (id) {
+      // case 'area':
+      //   return 'line';
+      // case 'line':
+      //   return 'line';
+      // case 'spine':
+      //   return 'line';
+      case 'bar':
+        return 'bar';
+      default:
+        return 'bar';
+    }
+  }
+
+  // Ensure that the canvas element with the correct ID exists in your HTML
+  public fetchData(endpoint: string) {
+    const apiUrl = `http://127.0.0.1:8000/api/report/${endpoint}`;
+
+    this.http.get(apiUrl).subscribe(
+      (resp: any) => {
+        this.errorMessage = null;
+
+        let labels: string[];
+        let data: number[];
+
+        if (Array.isArray(resp.label) && Array.isArray(resp.revenue)) {
+            labels = resp.label;
+            data = resp.revenue;
+        } else {
+            labels = [resp.label];
+            data = [resp.revenue];
+        }
+
+        console.log("=====>>>>>>>>", labels, data);
+        
         this.charts.forEach((chart) => {
           if (chart.selected) {
-            this.renderOrUpdateChart(chart.id, this.getChartType(chart.id), labels, data);
+            this.createChart(chart.id, this.getChartType(chart.id), labels, data);
           } else {
-            this.destroyChart(chart.id); // Destroy the chart if it's deselected
+            this.destroyChart(chart.id);
           }
         });
       },
       (error) => {
         this.errorMessage = 'Failed to load data';
         this.showErrorLabel();
-    }
+      }
     );
-  }
+}
 
-  // This method gets the chart type based on the chart ID
-  getChartType(id: string) {
-    switch (id) {
-      case 'barchart':
-        return 'bar';
-      case 'piechart':
-        return 'pie';
-      case 'dochart':
-        return 'doughnut';
-      case 'pochart':
-        return 'polarArea';
-      case 'rochart':
-        return 'radar';
-      case 'line':
-        return 'line';
-      default:
-        return 'bar';
-    }
-  }
-
-  // Render or update the chart
-  renderOrUpdateChart(id: string, typename: any, labels: string[], data: number[]) {
-    // Check if a chart already exists, if so, destroy it first
-    if (this.chartInstances[id]) {
-      this.chartInstances[id]?.destroy();
-    }    
-    // Create a new chart and store its instance
-    this.chartInstances[id] = new Chart(id, {
-      type: typename,
-      data: {
-        labels: labels,
-        datasets: [
-          {
+createChart(chartId: string, typename: any, labels: string[], data: number[]) {
+    this.destroyChart(chartId); // Destroy existing chart instance if any
+  
+    const canvas = document.getElementById(chartId) as HTMLCanvasElement;
+    const ctx = canvas?.getContext('2d');
+    if (ctx) {
+      this.chartInstances[chartId] = new Chart(ctx, {
+        type: typename,
+        data: {
+          labels: labels,
+          datasets: [{
             label: '# of Sales',
             data: data,
-            fill : true,
+            fill: true,
             borderWidth: 1,
-            barThickness: 30,
+            barThickness: chartId == 'Horizontal Bar' ? 2 : 30,
             maxBarThickness: 50,
             hoverBackgroundColor: "rgba(255,99,132,0.4)",
             hoverBorderColor: "rgba(255,99,132,1)",
             backgroundColor: "rgba(255,99,132,0.2)",
             borderColor: "rgba(255,99,132,1)",
-            pointBorderWidth : 5,
-          }
-        ]
-      },
-      options: {
-        animations: {
-          tension: {
-            duration: 2000,
-            easing: 'linear',
-            from: 1,
-            to: 0,
-            loop: false
-          }
+            pointBorderWidth: 5,
+          }]
         },
-        indexAxis: typename === 'bar' ? 'x' : undefined, // Only for bar charts
-        scales: {
-          y: { beginAtZero: true }
+        options: {
+          animations: (chartId === 'area' || chartId === 'line') ? {
+            tension: {
+              duration: 2000,
+              easing: 'linear',
+              from: 1,
+              to: 0,
+              loop: false
+            }
+          } : false,
+          borderWidth: 1,
+          borderColor: "rgba(255,99,132,1)",
+          barThickness: 20,
+          maxBarThickness: 20,
+          indexAxis: chartId == 'Horizontal Bar' ? 'y':'x',
+          responsive: true,
+          fill: chartId === 'area',
+          tension: (chartId === 'area' || chartId === 'spine') ? 0.4 : 0,
+          scales: {
+            x: {
+              stacked: true,
+              ticks: {
+                autoSkip: true,
+                maxTicksLimit: 24,
+              }
+            },
+            y: {
+              stacked: true,
+            },
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: '',
+            },
+            legend: {
+              position: 'top',
+            },
+          },
         },
-      }      
-    });
-  }
+      });
+    } else {
+      console.error(`Failed to get context for chart with id: ${chartId}`);
+    }
+}
 
-  // Destroy the chart if it exists
+
+  
+
   destroyChart(id: string) {
     if (this.chartInstances[id]) {
       this.chartInstances[id]?.destroy();
@@ -139,30 +210,21 @@ export class MychartComponent implements OnInit {
     }
   }
 
-  // Handle chart selection and re-fetch data when the selection changes
-  onChartSelection() {
-    this.fetchData(); // Re-fetch data and re-render selected charts
-    this.updateSelectAllState(); // Update the "Select All" button state
-  }
-
-  // Select or deselect all charts
   toggleSelectAll() {
-    this.allChartsSelected = !this.allChartsSelected; // Toggle the value
+    this.allChartsSelected = !this.allChartsSelected;
     this.charts.forEach((chart) => {
-      chart.selected = this.allChartsSelected; // Set all charts to selected/deselected
+      chart.selected = this.allChartsSelected;
     });
-    this.fetchData(); // Re-fetch data and re-render charts based on the selection
+    this.onOptionChange(); // Re-fetch data based on selection
   }
 
-  // New method to update the state of the "Select All" button
-  private updateSelectAllState() {
-    this.allChartsSelected = this.charts.every(chart => chart.selected);
-  }
-
-  // New method to toggle individual chart selection
   toggleChartSelection(chart: any) {
-    chart.selected = !chart.selected; // Toggle the selected state
-    this.onChartSelection(); // Call the existing method to re-fetch and render charts
+    chart.selected = !chart.selected;
+    this.onOptionChange(); // Re-fetch data and re-render selected charts
+  }
+
+  getIconClass(title: string): string {
+    return this.iconMap[title] || '';
   }
 
   private showErrorLabel() {
