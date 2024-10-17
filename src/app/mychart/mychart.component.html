@@ -1,15 +1,15 @@
 <div>
     <label for="time-frame">Select Time Frame:</label>
     <select id="time-frame" [(ngModel)]="selectedOption" (change)="onOptionChange()">
-      <option *ngFor="let option of options" [value]="option">{{ option }}</option>
+        <option *ngFor="let option of options" [value]="option">{{ option }}</option>
     </select>
-  </div>
-  
-  <div>
+</div>
+
+<div>
     <h2>{{ message }}</h2>
-  </div>
-  
-  <div class="row chart-selection" style="margin-bottom: 20px;">
+</div>
+
+<div class="row chart-selection" style="margin-bottom: 20px;">
     <div class="select-all">
         <button (click)="toggleSelectAll()">
             {{ allChartsSelected ? 'Deselect All Charts' : 'Select All Charts' }}
@@ -17,11 +17,11 @@
     </div>
     <div *ngFor="let chart of charts" class="chart-label">
         <button
+            *ngIf="chart.id !== 'pie' || (chart.id === 'pie' && pie_chart_time_frame.includes(selectedOption))"
             [ngClass]="{'selected': chart.selected}"
             (click)="toggleChartSelection(chart)"
         >
             <i *ngIf="getIconClass(chart.title)" [ngClass]="['fas', getIconClass(chart.title), 'fa-lg']"></i>
-            <span *ngIf="!getIconClass(chart.title)">{{ chart.title }}</span>
         </button>
     </div>
 </div>
@@ -35,12 +35,4 @@
     </ng-container>
 </div>
 
-
 <div *ngIf="errorMessage" class="error-label">{{ errorMessage }}</div>
-
-
-
-
-
-
-
