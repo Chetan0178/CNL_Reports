@@ -17,7 +17,7 @@
     </div>
     <div *ngFor="let chart of charts" class="chart-label">
         <button
-            *ngIf="chart.id !== 'pie' || (chart.id === 'pie' && pie_chart_time_frame.includes(selectedOption))"
+            *ngIf="mul_element_time_frame.includes(selectedOption) || chart.id !== 'pie' && chart.id !== 'line' && chart.id !== 'area' && chart.id !== 'spine'"
             [ngClass]="{'selected': chart.selected}"
             (click)="toggleChartSelection(chart)"
         >
@@ -30,7 +30,7 @@
     <ng-container *ngFor="let chart of charts">
         <div *ngIf="chart.selected" class="chart-item">
             <h2>{{ chart.title }}</h2>
-            <canvas [id]="chart.id" style="margin: 0 auto;"></canvas>  
+            <canvas [id]="chart.id" style="margin: 0 auto;"></canvas>
         </div>
     </ng-container>
 </div>

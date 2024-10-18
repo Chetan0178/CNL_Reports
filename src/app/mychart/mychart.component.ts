@@ -21,16 +21,19 @@ export class MychartComponent implements OnInit {
     'Last 6 Months Revenue',
     'Current Quarter Revenue',
     'Year to Current Date Revenue',
-    'Last 12 Months'
+    'Last 12 Months Revenue'
   ];
   selectedOption: string = 'Today'; 
-  message: string = 'Char analysis';
+  message: string = 'Chart analysis';
   private chartInstances: { [key: string]: Chart | null } = {};
 
   charts = [
     { title: 'Bar Chart', id: 'bar', selected: false },
     { title: 'Horizontal Bar Chart', id: 'Horizontal Bar', selected: false },
     { title: 'Pie Chart', id: 'pie', selected: false },
+    { title: 'Line Chart', id: 'line', selected: false },     // Added Line chart
+    { title: 'Area Chart', id: 'area', selected: false },     // Added Area chart
+    { title: 'Spine Chart', id: 'spine', selected: false },   // Added Spine chart
   ];
   allChartsSelected = false;
 
@@ -38,10 +41,13 @@ export class MychartComponent implements OnInit {
     'Bar Chart': 'fa-solid fa-chart-column',
     'Horizontal Bar Chart': 'fa-regular fa-chart-bar',
     'Pie Chart': 'fa-solid fa-pie-chart',
+    'Line Chart': 'fa-solid fa-chart-line',       // Added icons for new charts
+    'Area Chart': 'fa-solid fa-chart-area',
+    'Spine Chart': 'fa-solid fa-wave-square'
   };
 
-  // List of options to enable the Pie Chart
-  pie_chart_time_frame: string[] = [
+ // New list for multiple element time frame (for Pie, Line, Area, and Spine)
+  mul_element_time_frame: string[] = [
     'Last 3 Months Revenue',
     'Last 6 Months Revenue',
     'Year to Current Date Revenue',
@@ -54,73 +60,53 @@ export class MychartComponent implements OnInit {
     this.onOptionChange(); // Fetch initial data
   }
 
-  
-
   getChartType(id: string) {
     switch (id) {
       case 'bar':
         return 'bar';
       case 'pie':
-        return 'pie'; // Return 'pie' for Pie Chart
+        return 'pie';
+      case 'line':
+        return 'line';   // Return 'line' for Line Chart
+      case 'area':
+        return 'line';   // Area chart is drawn as a line chart with a fill option
+      case 'spine':
+        return 'line';   // Spine chart can also be a line chart with a different style
       default:
         return 'bar';
     }
   }
 
   onOptionChange() {
-    // Reset the Pie Chart selection only when the time frame changes to an invalid one
-    if (!this.pie_chart_time_frame.includes(this.selectedOption)) {
-        this.charts.find(chart => chart.id === 'pie')!.selected = false; 
-    }
-
-    switch (this.selectedOption) {
-      case 'Today':
-        this.fetchData('todays_revenue');  
-        break;
-      case 'yesterday':
-        this.fetchData('yesterday_revenue');   
-        break;
-      case 'Last 7 Days Revenue':
-        this.fetchData('last_7_days_revenue');         
-        break;
-      case 'Current Month Revenue':
-        this.fetchData('current_month_revenue');      
-        break;
-      case 'Last Month Revenue':
-        this.fetchData('last_month_revenue');      
-        break;
-      case 'Last 3 Months Revenue':
-      case 'Last 6 Months Revenue':
-      case 'Current Quarter Revenue':
-      case 'Year to Current Date Revenue':
-        this.fetchData(this.selectedOption.replace(/ /g, '_').toLowerCase()); 
-        break;
-      case 'Last 12 Months':
-        this.fetchData('year_to_last_month');      
-        break;
-      default:
-        this.message = '';
-    }
-    this.updateChartSelections(); // Update chart selections based on the time frame
-}
-
-updateChartSelections() {
-    // Ensure Pie Chart is only available for the valid time frames
-    this.charts.forEach(chart => {
-        if (chart.id === 'pie' && !this.pie_chart_time_frame.includes(this.selectedOption)) {
-            chart.selected = false;
+    // Reset Pie and other charts if not in the valid timeframe
+    if (!this.mul_element_time_frame.includes(this.selectedOption)) {
+      this.charts.forEach(chart => {
+        if (['pie', 'line', 'area', 'spine'].includes(chart.id)) {
+          chart.selected = false;
         }
-    });
-}
-
-toggleChartSelection(chart: any) {
-    // Only allow Pie Chart to be selected if in a valid time frame
-    if (chart.id !== 'pie' || (chart.id === 'pie' && this.pie_chart_time_frame.includes(this.selectedOption))) {
-        chart.selected = !chart.selected;
-        this.onOptionChange();  // Update data and charts based on selection
+      });
     }
-}
+    this.fetchData(this.selectedOption.replace(/ /g, '_').toLowerCase());
+    this.updateChartSelections();
+  }
 
+  updateChartSelections() {
+    // Ensure Pie and other multiple-element charts are only available for valid time frames
+    this.charts.forEach(chart => {
+      if (['pie', 'line', 'area', 'spine'].includes(chart.id) && !this.mul_element_time_frame.includes(this.selectedOption)) {
+        chart.selected = false;
+      }
+    });
+  }
+
+  toggleChartSelection(chart: any) {
+    if (chart.id !== 'pie' && chart.id !== 'line' && chart.id !== 'area' && chart.id !== 'spine') {
+      chart.selected = !chart.selected;
+    } else if (this.mul_element_time_frame.includes(this.selectedOption)) {
+      chart.selected = !chart.selected;
+    }
+    this.onOptionChange();  // Update data and charts based on selection
+  }
 
   public fetchData(endpoint: string) {
     const apiUrl = `http://127.0.0.1:8000/api/report/${endpoint}`;
@@ -132,8 +118,6 @@ toggleChartSelection(chart: any) {
         let labels: string[] = Array.isArray(resp.label) ? resp.label : [resp.label];
         let data: number[] = Array.isArray(resp.revenue) ? resp.revenue : [resp.revenue];
 
-        console.log("=====>>>>>>>>", labels, data);
-        
         this.charts.forEach((chart) => {
           if (chart.selected) {
             this.createChart(chart.id, this.getChartType(chart.id), labels, data);
@@ -150,19 +134,19 @@ toggleChartSelection(chart: any) {
   }
 
   createChart(chartId: string, typename: any, labels: string[], data: number[]) {
-    this.destroyChart(chartId); // Destroy existing chart instance if any
-  
+    this.destroyChart(chartId);
+
     const canvas = document.getElementById(chartId) as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d');
     if (ctx) {
       this.chartInstances[chartId] = new Chart(ctx, {
         type: typename,
         data: {
-          labels: labels,
+          labels: labels,    
           datasets: [{
             label: '# of Sales',
             data: data,
-            fill: chartId === 'pie' ? false : true, // Adjust fill for Pie Chart
+            fill:  (chartId === 'line' || chartId === 'pie' || chartId === 'spine') ? false : true,
             borderWidth: 1,
             barThickness: chartId === 'Horizontal Bar' ? 2 : 30,
             maxBarThickness: 50,
@@ -174,7 +158,7 @@ toggleChartSelection(chart: any) {
           }]
         },
         options: {
-          animations: (chartId === 'area' || chartId === 'line') ? {
+          animations: chartId === 'area' || chartId === 'line' ? {
             tension: {
               duration: 2000,
               easing: 'linear',
@@ -183,34 +167,16 @@ toggleChartSelection(chart: any) {
               loop: false
             }
           } : false,
-          borderWidth: 1,
-          borderColor: "rgba(255,99,132,1)",
-          barThickness: 20,
-          maxBarThickness: 20,
-          indexAxis: chartId === 'Horizontal Bar' ? 'y':'x',
+          tension:(chartId === 'spine') ? 0.5 : 0,
+          indexAxis: (chartId === 'Horizontal Bar') ? 'y' : 'x',
           responsive: true,
-          fill: chartId === 'area',
-          tension: (chartId === 'area' || chartId === 'spine') ? 0.4 : 0,
-          scales: {
-            x: {
-              stacked: true,
-              ticks: {
-                autoSkip: true,
-                maxTicksLimit: 24,
-              }
-            },
-            y: {
-              stacked: true,
-            },
-          },
+          scales: chartId === 'Horizontal Bar' ? {
+            x: { stacked: true, ticks: { autoSkip: true, maxTicksLimit: 24 } },
+            y: { stacked: true }
+          } : {},
           plugins: {
-            title: {
-              display: true,
-              text: '',
-            },
-            legend: {
-              position: 'top',
-            },
+            title: { display: true, text: '' },
+            legend: { position: 'top' }
           },
         },
       });
@@ -232,7 +198,7 @@ toggleChartSelection(chart: any) {
   toggleSelectAll() {
     this.allChartsSelected = !this.allChartsSelected;
     this.charts.forEach((chart) => {
-      if (chart.id !== 'pie' || (chart.id === 'pie' && this.pie_chart_time_frame.includes(this.selectedOption))) {
+      if (this.mul_element_time_frame.includes(this.selectedOption) || !['pie', 'line', 'area', 'spine'].includes(chart.id)) {
         chart.selected = this.allChartsSelected;
       }
     });
