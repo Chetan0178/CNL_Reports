@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
+import { API_HOST } from '../../assets/api.config';
 Chart.register(...registerables);
 
 @Component({
@@ -37,7 +38,7 @@ export class SalesPerformanceByCustomerComponent implements OnInit {
   }
 
   public fetchData() {
-    const apiUrl = `http://127.0.0.1:8000/api/report/Sales-Performance-by-Customer/`;
+    const apiUrl = `${API_HOST}/api/report/Sales-Performance-by-Customer/`;
 
     this.http.get(apiUrl).subscribe(
       (resp: any) => {

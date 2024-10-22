@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
 Chart.register(...registerables);
+import { API_HOST } from '../../assets/api.config';
+
 
 @Component({
   selector: 'app-mychart',
@@ -107,9 +109,9 @@ export class MychartComponent implements OnInit {
     }
     this.onOptionChange();  // Update data and charts based on selection
   }
-
+  
   public fetchData(endpoint: string) {
-    const apiUrl = `http://127.0.0.1:8000/api/report/${endpoint}`;
+    const apiUrl = `${API_HOST}/api/report/${endpoint}`;
 
     this.http.get(apiUrl).subscribe(
       (resp: any) => {

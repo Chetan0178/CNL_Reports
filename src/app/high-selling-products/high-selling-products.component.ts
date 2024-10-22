@@ -192,6 +192,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart, ChartType, ChartDataset } from 'chart.js';
 import { HttpClient } from '@angular/common/http';
+import { API_HOST } from '../../assets/api.config';
 
 @Component({
   selector: 'app-high-selling-products',
@@ -245,7 +246,7 @@ export class HighSellingProductsComponent implements OnInit {
 
   // Fetch data from the API
   public fetchData(endpoint: string) {
-    const apiUrl = `http://127.0.0.1:8000/api/report/${endpoint}`;
+    const apiUrl = `${API_HOST}/api/report/${endpoint}`;
     this.http.get(apiUrl).subscribe(
       (API_resp: any) => {
         this.errorMessage = null; 

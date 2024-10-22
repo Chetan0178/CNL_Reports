@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Chart, registerables } from 'chart.js';
 import { getHoverColor } from 'chart.js/helpers';
+import { API_HOST } from '../../assets/api.config';
 Chart.register(...registerables);
 
 @Component({
@@ -59,7 +60,7 @@ export class SalesOrderTrendComponent implements OnInit {
   }
 
   public fetchData(endpoint: string) {
-    const apiUrl = `http://127.0.0.1:8000/api/report/${endpoint}`;
+    const apiUrl = `${API_HOST}/api/report/${endpoint}`;
 
     this.http.get(apiUrl).subscribe(
       (resp: any) => {
