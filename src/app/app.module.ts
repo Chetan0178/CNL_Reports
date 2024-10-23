@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { SalesOrderTrendComponent } from './sales-order-trend/sales-order-trend.component';
 import { SalesPerformanceByCustomerComponent } from './sales-performance-by-customer/sales-performance-by-customer.component';
 import { HighSellingProductsComponent } from './high-selling-products/high-selling-products.component';
+import { QueryRunnerComponent } from './query-runner/query-runner.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { HighSellingProductsComponent } from './high-selling-products/high-selli
     MychartComponent,
     SalesOrderTrendComponent,
     SalesPerformanceByCustomerComponent,
-    HighSellingProductsComponent
+    HighSellingProductsComponent,
+    QueryRunnerComponent
   ],
   imports: [
     BrowserModule,

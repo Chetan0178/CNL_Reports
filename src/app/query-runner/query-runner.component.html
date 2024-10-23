@@ -1,0 +1,21 @@
+<div>
+    <textarea [(ngModel)]="query" rows="4" cols="50" placeholder="Enter your SQL query here..."></textarea>
+    <br>
+    <button (click)="fetchData()">
+        <i class="fas fa-play"></i> Execute Query
+    </button>
+</div>
+
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+<table *ngIf="Q_Data.length">
+    <thead>
+        <tr>
+            <th *ngFor="let header of headers">{{ header }}</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let data of Q_Data">
+            <td *ngFor="let header of headers">{{ data[header] }}</td>
+        </tr>
+    </tbody>
+</table>
