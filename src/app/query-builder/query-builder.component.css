@@ -1,0 +1,51 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the left */
+}
+
+button {
+  background-color: #e74c3c; 
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 10px; /* Space below the button */
+  margin-bottom: 10px; /* Space below the button */
+}
+
+button:hover {
+  background-color: #c0392b; /* Darker red on hover */
+}
+
+.table-list {
+  width: 2.5in; /* Make the table width responsive */
+  max-width: 600px; /* Set a maximum width */
+  height: 4in;
+  overflow-y: auto; /* Enables vertical scrolling */
+  border: 1px solid #ccc; /* Adds a border for clarity */
+  padding: 5px;
+}
+
+ul {
+  list-style-type: none; /* Removes default bullet points */
+  padding: 0;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+label {
+  display: flex;
+  align-items: center;
+}
+
+input[type="checkbox"] {
+  margin-right: 10px; /* Space between checkbox and text */
+}

@@ -1,0 +1,18 @@
+<div class="container">
+  <button (click)="loadTables()">Tables</button>
+  
+  <!-- Show a loading spinner or message when loading -->
+  <div *ngIf="isLoading">Loading...</div>
+
+  <!-- Table list with scrollable div -->
+  <div class="table-list" *ngIf="tables.length > 0">
+    <ul>
+      <li *ngFor="let table of tables">
+        <label>
+          <input type="checkbox" /> <!-- Checkbox on the left -->
+          {{ table }}
+        </label>
+      </li>
+    </ul>
+  </div>
+</div>

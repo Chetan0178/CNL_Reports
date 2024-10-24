@@ -10,6 +10,7 @@ import { SalesOrderTrendComponent } from './sales-order-trend/sales-order-trend.
 import { SalesPerformanceByCustomerComponent } from './sales-performance-by-customer/sales-performance-by-customer.component';
 import { HighSellingProductsComponent } from './high-selling-products/high-selling-products.component';
 import { QueryRunnerComponent } from './query-runner/query-runner.component';
+import { QueryBuilderComponent } from './query-builder/query-builder.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { QueryRunnerComponent } from './query-runner/query-runner.component';
     SalesOrderTrendComponent,
     SalesPerformanceByCustomerComponent,
     HighSellingProductsComponent,
-    QueryRunnerComponent
+    QueryRunnerComponent,
+    QueryBuilderComponent
   ],
   imports: [
     BrowserModule,
