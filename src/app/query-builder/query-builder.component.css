@@ -1,11 +1,11 @@
 .container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align items to the left */
+  align-items: flex-start;
 }
 
 button {
-  background-color: #e74c3c; 
+  background-color: #e74c3c;
   color: white;
   border: none;
   border-radius: 4px;
@@ -13,25 +13,33 @@ button {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-top: 10px; /* Space below the button */
-  margin-bottom: 10px; /* Space below the button */
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 button:hover {
-  background-color: #c0392b; /* Darker red on hover */
+  background-color: #c0392b;
 }
 
+.main-container {
+  display: flex;
+  flex-direction: row; /* Align items side by side */
+  gap: 20px; /* Space between table list and columns */
+  margin-top: 20px;
+}
+
+/* Scrollable area for the main tables list */
 .table-list {
-  width: 2.5in; /* Make the table width responsive */
-  max-width: 600px; /* Set a maximum width */
-  height: 4in;
-  overflow-y: auto; /* Enables vertical scrolling */
-  border: 1px solid #ccc; /* Adds a border for clarity */
+  overflow-y: auto;
+  border: 1px solid #ccc;
   padding: 5px;
+  width: 210px; /* Fixed width of the main table list in pixels*/
+  height: 4.5in; /* Fixed height */
+  box-sizing: border-box; /* Include padding and border in the element's total width */
 }
 
 ul {
-  list-style-type: none; /* Removes default bullet points */
+  list-style-type: none;
   padding: 0;
 }
 
@@ -47,5 +55,50 @@ label {
 }
 
 input[type="checkbox"] {
-  margin-right: 10px; /* Space between checkbox and text */
+  margin-right: 10px;
+}
+
+/* Flexbox to align column tables side by side */
+.columns-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between column tables */
+  margin-top: 0px;
+  width: 13in;
+}
+
+/* Each individual column table */
+.column_table {
+  border: 1px solid #ccc;
+  width: 2in; /* Width of each column table */
+  height: 2in; /* Fixed height for column tables */
+  overflow-y: auto; /* Scrollable if necessary */
+  text-align: left;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background-color: #f0f0f0;
+  text-align: left;
+}
+
+th, td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+td input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+/* For column table titles */
+h3 {
+  font-size: 14px;
+  font-weight: bold;
+  margin: 0 0 5px 0;
 }

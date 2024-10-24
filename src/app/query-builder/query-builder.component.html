@@ -1,18 +1,46 @@
 <div class="container">
+  <!-- Button to load tables -->
   <button (click)="loadTables()">Tables</button>
   
-  <!-- Show a loading spinner or message when loading -->
-  <div *ngIf="isLoading">Loading...</div>
+  <!-- Show loading message when data is being fetched -->
+  <div *ngIf="isLoading"></div>
 
-  <!-- Table list with scrollable div -->
-  <div class="table-list" *ngIf="tables.length > 0">
-    <ul>
-      <li *ngFor="let table of tables">
-        <label>
-          <input type="checkbox" /> <!-- Checkbox on the left -->
-          {{ table }}
-        </label>
-      </li>
-    </ul>
+  <!-- Main container that will contain both the main table list and columns side by side -->
+  <div class="main-container">
+    
+    <!-- Tables list (main table) -->
+    <div *ngIf="tables.length > 0" class="table-list">
+      <ul>
+        <li *ngFor="let table of tables">
+          <label>
+            <input type="checkbox" (change)="loadColumns(table, $event)" />
+            {{ table }}
+          </label>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Columns container (all selected columns tables side-by-side) -->
+    <div class="columns-container" *ngIf="getSelectedColumnKeys().length > 0">
+      <div *ngFor="let tableName of getSelectedColumnKeys()">
+        <div class="column_table">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>{{ tableName }} columns</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let column of selectedColumns[tableName]">
+                <td><input type="checkbox" /></td>
+                <td>{{ column }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
