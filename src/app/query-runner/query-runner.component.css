@@ -5,7 +5,7 @@ div {
     padding: 20px;
     background-color: #ffffff; /* Changed to white for a cleaner look */
     border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); */
 }
 
 /* Textarea styling */
@@ -34,6 +34,7 @@ button {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-right: 10px; /* Adjust the value as needed */
 }
 
 button:hover {
@@ -61,7 +62,7 @@ th, td {
 }
 
 th {
-    background-color: #FF6F61;; /* Bold red header */
+    background-color: #FF6F61; /* Bold red header */
     color: white;
     position: sticky;   
     top: 0; /* For sticky header */
@@ -73,10 +74,60 @@ th:hover {
 }
 
 tr:hover {
-    background-color: #f9e6e6; /* Light red for row hover effect */
+    background-color: #f7c2c2; /* Light red for row hover effect */
 }
 
 /* Animation for table rows */
 tbody tr {
     transition: background-color 0.3s;
+}
+
+/* Modal styles */
+.modal {
+    display: block;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0); /* Change 0.8 to adjust transparency */
+}
+
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 300px; /* Width of modal */
+    border-radius: 9px; /* Rounded corners */
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Input field styling inside modal */
+.modal-content input {
+    width: calc(100% - 20px); /* Full width with padding */
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid #e74c3c; /* Red border */
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+.modal-content input:focus {
+    border-color: #c0392b; /* Darker red on focus */
 }

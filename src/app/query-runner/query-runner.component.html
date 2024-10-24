@@ -1,12 +1,12 @@
 <div>
     <textarea [(ngModel)]="query" rows="4" cols="50" placeholder="Enter your SQL query here..."></textarea>
     <br>
-    <button (click)="fetchData()">
-        <i class="fas fa-play"></i> Execute Query
-    </button>
+    <button (click)="fetchData()">Execute Query</button>
+    <button (click)="openSaveModal()">Save Query</button>
 </div>
 
 <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
 <table *ngIf="Q_Data.length">
     <thead>
         <tr>
@@ -19,3 +19,15 @@
         </tr>
     </tbody>
 </table>
+
+<!-- Modal for saving query -->
+<div *ngIf="showModal" class="modal">
+    <div class="modal-content">
+        <span class="close" (click)="closeSaveModal()">&times;</span>
+        <h3>Save Query</h3>
+        <input type="text" [(ngModel)]="saveQueryData.name" placeholder="Enter Name" required />
+        <input type="text" [(ngModel)]="saveQueryData.query_id" placeholder="Enter Query ID" required />
+        <button (click)="saveQuery()">Submit</button>
+        <div *ngIf="responseMessage" class="success">{{ responseMessage }}</div>
+    </div>
+</div>
