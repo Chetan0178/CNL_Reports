@@ -104,8 +104,43 @@ h3 {
 }
 
 .container-two {
-  display: flex;
-  flex-direction: row; /* Align items side by side */
-  gap: 20px; /* Space between table list and columns */
   margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 50%;
+  overflow-x: auto; /* Allows horizontal scrolling if needed */
+}
+
+.container-two table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.container-two th, .container-two td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+
+.container-two th {
+  background-color: #f0f0f0; /* Light background for header */
+}
+
+.selected-field:hover .cancel-icon {
+  color: red;
+  cursor: pointer;
+  font-size: 18x;
+  display: inline-block; 
+  font: bold; 
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.container-two input[type="text"] {
+  padding: 5px;
+  width: 80%; 
+  margin-left: 15px;
 }
