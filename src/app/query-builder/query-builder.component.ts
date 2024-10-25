@@ -13,7 +13,7 @@ export class QueryBuilderComponent {
   selectedColumns: { [tableName: string]: string[] } = {};
   columnAliases: { [columnName: string]: string } = {};
   selectedFields: string[] = [];
-
+  errorMessage: string | null = null;
   isLoading = false;
 
   constructor(private http: HttpClient) {}
@@ -22,12 +22,12 @@ export class QueryBuilderComponent {
     this.isLoading = true;
     const apiUrl = `${API_HOST}/api/tables/`;
     this.http.get(apiUrl).subscribe(
-      (response:any) => {
+      (response: any) => {
         this.tables = response.tables;
         this.isLoading = false;
       },
       (error) => {
-        console.error('Error fetching tables', error);
+        this.showError('Error fetching tables');
         this.isLoading = false;
       }
     );
@@ -35,24 +35,30 @@ export class QueryBuilderComponent {
 
   loadColumns(tableName: string, event: any) {
     const isChecked = event.target.checked;
-
     if (isChecked) {
       this.isLoading = true;
       const columns_api_url = `${API_HOST}/api/tables/${tableName}/columns/`;
       this.http.get(columns_api_url).subscribe(
-        (response:any) => {
+        (response: any) => {
           this.selectedColumns[tableName] = response.columns;
           this.isLoading = false;
         },
         (error) => {
-          console.error('Error fetching columns for table:', tableName, error);
+          this.showError(`Error fetching columns for table: ${tableName}`);
           this.isLoading = false;
         }
       );
     } else {
       delete this.selectedColumns[tableName];
-      this.removeAllColumnsFromTable(tableName); // If the table is unchecked, remove its columns
+      this.removeAllColumnsFromTable(tableName);
     }
+  }
+
+  showError(message: string) {
+    this.errorMessage = message;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 3000);
   }
 
   getSelectedColumnKeys(): string[] {
@@ -78,7 +84,7 @@ export class QueryBuilderComponent {
     this.columnAliases[column] = event.target.value;
   }
 
-  // Function to remove a selected field and uncheck the associated checkbox
+  // Function to remove a selected field from alias table and uncheck the associated checkbox
   removeSelectedField(columnKey: string) {
     const index = this.selectedFields.indexOf(columnKey);
     if (index > -1) {

@@ -1,4 +1,7 @@
 <div class="container">
+  <!-- Notification label for error messages -->
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
   <!-- Button to load tables -->
   <button (click)="loadTables()">Tables</button>
   
