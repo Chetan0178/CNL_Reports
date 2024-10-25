@@ -3,7 +3,7 @@
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
   <!-- Button to load tables -->
-  <button (click)="loadTables()">Tables</button>
+  <button (click)="loadTables()">Load Tables</button>
   
   <!-- Show loading message when data is being fetched -->
   <div *ngIf="isLoading"></div>
@@ -56,7 +56,6 @@
 
   <!-- Selected fields box -->
 <div class="container-two" *ngIf="getSelectedColumnsList().length != 0">
-  <h3>Selected Fields</h3>
   <table>
     <thead>
       <tr>
@@ -84,7 +83,7 @@
       </tr>
     </tbody>
   </table>
-  <p *ngIf="getSelectedColumnsList().length === 0">No fields selected.</p>
+  <!-- <p *ngIf="getSelectedColumnsList().length === 0">No fields selected.</p> -->
 </div>
 
 </div>

@@ -1,7 +1,8 @@
 .container {
-  display: flex;
+  display: flexbox;
   flex-direction: column;
   align-items: flex-start;
+  /* width: 50px; */
 }
 
 button {
@@ -34,7 +35,7 @@ button:hover {
   border: 1px solid #ccc;
   padding: 5px;
   width: 210px; /* Fixed width of the main table list in pixels*/
-  height: 4.5in; /* Fixed height */
+  height: 2in; /* Fixed height */
   box-sizing: border-box; /* Include padding and border in the element's total width */
 }
 
@@ -107,19 +108,28 @@ h3 {
   margin-top: 20px;
   border: 1px solid #ccc;
   padding: 10px;
-  width: 40%;
+  width: 100%;
   overflow-x: auto; /* Allows horizontal scrolling if needed */
+  display: flex;
+   gap: 20px;    /* Space between Alias tables */
 }
 
 .container-two table {
-  width: 100%;
+  width: 40%;
   border-collapse: collapse;
 }
 
-.container-two th, .container-two td {
+.container-two td
+{
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 4px;
   text-align: left;
+}
+
+.container-two th {
+  border: 1px solid #ccc;
+  padding: 4px;
+  text-align: center;
 }
 
 .container-two th {
