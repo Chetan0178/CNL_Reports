@@ -21,7 +21,7 @@ button:hover {
   background-color: #c0392b;
 }
 
-.main-container {
+.container-one {
   display: flex;
   flex-direction: row; /* Align items side by side */
   gap: 20px; /* Space between table list and columns */
@@ -101,4 +101,11 @@ h3 {
   font-size: 14px;
   font-weight: bold;
   margin: 0 0 5px 0;
+}
+
+.container-two {
+  display: flex;
+  flex-direction: row; /* Align items side by side */
+  gap: 20px; /* Space between table list and columns */
+  margin-top: 20px;
 }
