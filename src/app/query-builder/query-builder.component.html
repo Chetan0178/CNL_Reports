@@ -1,26 +1,30 @@
 <div class="container">
+  <!-- Notification label for error messages -->
+  <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
   <!-- Button to load tables -->
-  <button (click)="loadTables()">Tables</button>
+  <button (click)="loadTables()">Load Tables</button>
   
   <!-- Show loading message when data is being fetched -->
   <div *ngIf="isLoading"></div>
 
-  <!-- Main container that will contain both the main table list and columns side by side -->
   <div class="container-one">
-    
-    <!-- Tables list (main table) -->
     <div *ngIf="tables.length > 0" class="table-list">
       <ul>
         <li *ngFor="let table of tables">
           <label>
-            <input type="checkbox" (change)="loadColumns(table, $event)" />
+            <input 
+              type="checkbox" 
+              (change)="loadColumns(table, $event)" 
+              [attr.data-table]="table" 
+            />
             {{ table }}
           </label>
         </li>
       </ul>
     </div>
 
-    <!-- Columns container (all selected columns tables side-by-side) -->
+    <!-- Columns container (all selected columns) -->
     <div class="columns-container" *ngIf="getSelectedColumnKeys().length > 0">
       <div *ngFor="let tableName of getSelectedColumnKeys()">
         <div class="column_table">
@@ -33,7 +37,14 @@
             </thead>
             <tbody>
               <tr *ngFor="let column of selectedColumns[tableName]">
-                <td><input type="checkbox" /></td>
+                <td>
+                  <input 
+                    type="checkbox" 
+                    (change)="toggleColumnSelection(tableName, column, $event)" 
+                    [attr.data-table]="tableName" 
+                    [attr.data-column]="column" 
+                  />
+                </td>
                 <td>{{ column }}</td>
               </tr>
             </tbody>
@@ -42,7 +53,37 @@
       </div>
     </div>
   </div>
-  <div class="container-two">
-    <h1>Hi this is 2nd contain</h1>
-  </div>
+
+  <!-- Selected fields box -->
+<div class="container-two" *ngIf="getSelectedColumnsList().length != 0">
+  <table>
+    <thead>
+      <tr>
+        <th>Action</th>
+        <th>Field Name</th>
+        <th>Alias</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="getSelectedColumnsList().length > 0">
+      <tr *ngFor="let field of getSelectedColumnsList()" class="selected-field">
+        <td>
+          <span class="cancel-icon" (click)="removeSelectedField(field)">✖</span>
+        </td>
+        <td>
+          <label>{{ field }} as</label>
+        </td>
+        <td>
+          <input 
+            type="text" 
+            [value]="columnAliases[field] || ''"
+            (input)="updateAlias(field, $event)" 
+            placeholder="Alias (optional)" 
+          />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- <p *ngIf="getSelectedColumnsList().length === 0">No fields selected.</p> -->
+</div>
+
 </div>

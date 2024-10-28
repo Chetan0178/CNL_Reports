@@ -1,7 +1,8 @@
 .container {
-  display: flex;
+  display: flexbox;
   flex-direction: column;
   align-items: flex-start;
+  /* width: 50px; */
 }
 
 button {
@@ -34,7 +35,7 @@ button:hover {
   border: 1px solid #ccc;
   padding: 5px;
   width: 210px; /* Fixed width of the main table list in pixels*/
-  height: 4.5in; /* Fixed height */
+  height: 2in; /* Fixed height */
   box-sizing: border-box; /* Include padding and border in the element's total width */
 }
 
@@ -104,8 +105,84 @@ h3 {
 }
 
 .container-two {
-  display: flex;
-  flex-direction: row; /* Align items side by side */
-  gap: 20px; /* Space between table list and columns */
   margin-top: 20px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 100%;
+  overflow-x: auto; /* Allows horizontal scrolling if needed */
+  display: flex;
+   gap: 20px;    /* Space between Alias tables */
+}
+
+.container-two table {
+  width: 40%;
+  border-collapse: collapse;
+}
+
+.container-two td
+{
+  border: 1px solid #ccc;
+  padding: 4px;
+  text-align: left;
+}
+
+.container-two th {
+  border: 1px solid #ccc;
+  padding: 4px;
+  text-align: center;
+}
+
+.container-two th {
+  background-color: #f0f0f0; /* Light background for header */
+}
+
+.selected-field:hover .cancel-icon {
+  color: red;
+  cursor: pointer;
+  font-size: 18x;
+  display: inline-block; 
+  font: bold; 
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.container-two input[type="text"] {
+  padding: 5px;
+  width: 80%; 
+  margin-left: 15px;
+}
+
+
+.error-message {
+  position: fixed;
+  top: 20px;
+  right: -300px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: 2px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  animation: slideIn 0.8s forwards, fadeOut 0.8s 2.5s forwards;
+}
+
+@keyframes slideIn {
+  from {
+    right: -300px;
+  }
+  to {
+    right: 20px;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
