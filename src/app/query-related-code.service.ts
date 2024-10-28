@@ -1,5 +1,7 @@
 import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+
 
 
 @Injectable({
@@ -9,16 +11,23 @@ export class QueryRelatedCodeService{
   query: string = ''; // Hold the user input query
   responseMessage: string = ''; // To hold the response message after saving
   showModal: boolean = false; // Control modal visibility
-  Q_Data: any[] = [];
   errorMessage: string = '';
-  headers: string[] = []; // To hold the headers
   saveQueryData = {
     query: '',
     name: '',
-    query_id: '',
+    query_id: ''  
   }; // Data for saving the query
 
+  private Q_DataSubject = new BehaviorSubject<any[]>([]);
+  private headersSubject = new BehaviorSubject<string[]>([]);
+  Q_Data$ = this.Q_DataSubject.asObservable();
+  headers$ = this.headersSubject.asObservable();
+  
+  
+
   private saveApiUrl = 'http://127.0.0.1:8000/api/save_query/';
+  private apiUrl = 'http://127.0.0.1:8000/api/execute_query/';
+
 
   constructor(private http: HttpClient){}
 
@@ -36,7 +45,6 @@ export class QueryRelatedCodeService{
   }
 
   saveQuery(query: any) {
-    console.log(this.saveQueryData)
      this.http.post<any>(this.saveApiUrl, this.saveQueryData).subscribe(
       (response) => {
         this.responseMessage = 'Query saved successfully! Response: ' + JSON.stringify(response);
@@ -48,4 +56,27 @@ export class QueryRelatedCodeService{
       }
     );
   }
+
+  //Run Query Code
+  fetchData(query: string) {
+    // Clear previous results
+    this.Q_DataSubject.next([]);
+    this.headersSubject.next([]);
+
+    this.http.post<any>(this.apiUrl, { query }).subscribe(
+      (resp) => {
+        this.Q_DataSubject.next(resp);
+        // Extract headers from the first object in the response
+        if (resp.length > 0) {
+          this.headersSubject.next(Object.keys(resp[0]));
+        }
+      },
+      (error) => {
+        // Handle error as necessary
+        console.error(error);
+      }
+    );
+  }
+
+
 }

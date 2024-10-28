@@ -16,33 +16,21 @@ export class QueryRunnerComponent implements OnInit {
   save_query =this.query
   responseMessage: string = ''; // To hold the response message after saving  
 
-  private apiUrl = 'http://127.0.0.1:8000/api/execute_query/';
-
   constructor(private http: HttpClient, public queryRelatedCodeService: QueryRelatedCodeService) {}
 
   ngOnInit(): void {
-    // No default query is set
+    this.queryRelatedCodeService.Q_Data$.subscribe(data => {
+      this.Q_Data = data;
+    });
+
+    this.queryRelatedCodeService.headers$.subscribe(headers => {
+      this.headers = headers;
+    });
   }
 
   fetchData() {
-    // Clear previous results
-    this.Q_Data = [];
-    this.headers = [];
-    this.errorMessage = ''; // Clear any previous error messages
-
-    this.http.post<any>(this.apiUrl, { query: this.query }).subscribe(
-      (resp) => {
-        this.Q_Data = resp;
-        // Extract headers from the first object in the response
-        if (this.Q_Data.length > 0) {
-          this.headers = Object.keys(this.Q_Data[0]);
-        }
-      },
-      (error) => {
-        // Check if the error response has a message and display it
-        this.errorMessage = error.error?.error || 'Error fetching Query data';
-      }
-    );
+    console.log("select * from sales:" ,this.query)
+    this.queryRelatedCodeService.fetchData(this.query);    
   }
 
   openSaveModal() {
