@@ -55,35 +55,82 @@
   </div>
 
   <!-- Selected fields box -->
-<div class="container-two" *ngIf="getSelectedColumnsList().length != 0">
-  <table>
-    <thead>
-      <tr>
-        <th>Action</th>
-        <th>Field Name</th>
-        <th>Alias</th>
-      </tr>
-    </thead>
-    <tbody *ngIf="getSelectedColumnsList().length > 0">
-      <tr *ngFor="let field of getSelectedColumnsList()" class="selected-field">
-        <td>
-          <span class="cancel-icon" (click)="removeSelectedField(field)">✖</span>
-        </td>
-        <td>
-          <label>{{ field }} as</label>
-        </td>
-        <td>
-          <input 
-            type="text" 
-            [value]="columnAliases[field] || ''"
-            (input)="updateAlias(field, $event)" 
-            placeholder="Alias (optional)" 
-          />
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <!-- <p *ngIf="getSelectedColumnsList().length === 0">No fields selected.</p> -->
-</div>
+  <div class="container-two" *ngIf="getSelectedColumnsList().length != 0">
+    <!-- Selected Fields Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Action</th>
+          <th>Field Name</th>
+          <th>Alias</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="getSelectedColumnsList().length > 0">
+        <tr *ngFor="let field of getSelectedColumnsList()" class="selected-field">
+          <td><span class="cancel-icon" (click)="removeSelectedField(field)">✖</span></td>
+          <td><label>{{ field }} as</label></td>
+          <td><input type="text" [value]="columnAliases[field] || ''" (input)="updateAlias(field, $event)" placeholder="Alias (optional)" /></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- WHERE Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>WHERE Clause</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <input 
+              type="text" 
+              placeholder="Enter WHERE condition" 
+              [(ngModel)]="whereCondition" 
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- JOIN Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>JOIN Clause</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <input 
+              type="text" 
+              placeholder="Enter JOIN condition" 
+              [(ngModel)]="joinCondition" 
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- <p *ngIf="getSelectedColumnsList().length === 0">No fields selected.</p> -->
+  </div>
+
+  <!-- Main Query Container   *ngIf="getSelectedColumnsList().length != 0"-->
+  <div class="main_query">
+    <table class="main-tbl">
+      <div class="main_query">
+        <p>select</p>
+        <textarea [(ngModel)]="selectedColumnsListForQuery" rows="3" cols="30" placeholder="Columns list"></textarea>
+      
+        <p>from</p>
+        <textarea [(ngModel)]="selectedTablesForQuery" rows="1" cols="30" placeholder="Table list"></textarea>
+        
+        <!-- Save Query Button -->
+        <button (click)="saveQuery()">Save Query</button>
+      </div>
+      
+    </table>
+  </div>
 
 </div>
