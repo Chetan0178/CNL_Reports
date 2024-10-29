@@ -173,7 +173,6 @@ export class SalesOrderTrendComponent implements OnInit {
   
     const canvas = document.getElementById(chartId) as HTMLCanvasElement;
     const ctx = canvas?.getContext('2d'); // Use optional chaining
-   console.log("===>,", chartId)
     if (ctx) { // Check if ctx is not null
       this.chartInstances[chartId] = new Chart(ctx, {
         type: typename,

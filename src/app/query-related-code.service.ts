@@ -31,7 +31,7 @@ export class QueryRelatedCodeService{
 
   constructor(private http: HttpClient){}
 
-  openSaveModal(query: any) 
+  openSaveModal() 
   {
     // Reset the saveQueryData to empty fields
     this.responseMessage = ''; // Clear previous response message
@@ -44,7 +44,7 @@ export class QueryRelatedCodeService{
     document.body.classList.remove('modal-open'); // Enable body scroll
   }
 
-  saveQuery(query: any) {
+  saveQuery() {
      this.http.post<any>(this.saveApiUrl, this.saveQueryData).subscribe(
       (response) => {
         this.responseMessage = 'Query saved successfully! Response: ' + JSON.stringify(response);

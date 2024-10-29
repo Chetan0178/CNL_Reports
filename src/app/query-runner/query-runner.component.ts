@@ -29,13 +29,12 @@ export class QueryRunnerComponent implements OnInit {
   }
 
   fetchData() {
-    console.log("select * from sales:" ,this.query)
     this.queryRelatedCodeService.fetchData(this.query);    
   }
 
   openSaveModal() {
     this.queryRelatedCodeService.saveQueryData.query = this.query;
-    this.queryRelatedCodeService.openSaveModal(this.query);
+    this.queryRelatedCodeService.openSaveModal();
   }
 
   closeSaveModal() {
@@ -43,6 +42,6 @@ export class QueryRunnerComponent implements OnInit {
   }
 
   saveQuery() {
-    this.queryRelatedCodeService.saveQuery(this.query);
+    this.queryRelatedCodeService.saveQuery();
   }
 }

@@ -46,7 +46,7 @@ export class QueryBuilderComponent {
         this.isLoading = false;
       },
       (error) => {
-        this.showError('Error fetching tables');
+        this.showMessage('Error fetching tables');
         this.isLoading = false;
       }
     );
@@ -64,7 +64,7 @@ export class QueryBuilderComponent {
           this.updateMainQueryDisplay(); // Update main query on table selection
         },
         (error) => {
-          this.showError(`Error fetching columns for table: ${tableName}`);
+          this.showMessage(`Error fetching columns for table: ${tableName}`);
           this.isLoading = false;
         }
       );
@@ -73,13 +73,6 @@ export class QueryBuilderComponent {
       this.removeAllColumnsFromTable(tableName);
       this.updateMainQueryDisplay(); // Update main query on table deselection
     }
-  }
-
-  showError(message: string) {
-    this.errorMessage = message;
-    setTimeout(() => {
-      this.errorMessage = null;
-    }, 3000);
   }
 
   getSelectedColumnKeys(): string[] {
@@ -105,6 +98,11 @@ export class QueryBuilderComponent {
   updateAlias(column: string, event: any) {
     this.columnAliases[column] = event.target.value;
     this.updateMainQueryDisplay(); // Update main query when alias changes
+  }
+
+  // Construct query using the editable inputs
+  finalquery(){
+    return this.query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`; //  WHERE ${this.whereCondition} 
   }
 
   // Function to remove a selected field from alias table and uncheck the associated checkbox
@@ -144,29 +142,29 @@ export class QueryBuilderComponent {
     this.selectedTablesForQuery = Object.keys(this.selectedColumns).join(', ');
   }
 
+  openSaveModal() {
+    this.queryRelatedCodeService.saveQueryData.query = this.finalquery();
+    this.queryRelatedCodeService.openSaveModal();
+  }
+
+  closeSaveModal() {
+    this.queryRelatedCodeService.closeSaveModal();    
+  }
+
   // Function to build the query and send it to the API
   saveQuery() {
-    // Construct query using the editable inputs
-    console.log("select * from sales LIne 138:" ,this.query)
-    this.query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
-    console.log('Generated Query  LIne 140:', this.query); // Debugging output
-
-    // Post the query to the specified endpoint
-    this.http.post(`${API_HOST}/api/save_query/`, { query: this.query }).subscribe({
-      next: (response) => {        
-        console.log('Query saved successfully', response);
-        alert('Query saved successfully');
-      },
-      error: (error) => {
-        this.showError('Error saving query');
-      }
-    });
+    this.queryRelatedCodeService.saveQuery();
   }
 
   fetchData() {
-    this.query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
-    console.log("line 156", this.query)
-    this.queryRelatedCodeService.fetchData(this.query);    
+    this.queryRelatedCodeService.fetchData(this.finalquery());    
+  }
+
+  showMessage(message: string) {
+    this.errorMessage = message;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 3000);
   }
 
 }
