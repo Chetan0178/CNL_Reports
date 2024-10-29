@@ -102,7 +102,14 @@ export class QueryBuilderComponent {
 
   // Construct query using the editable inputs
   finalquery(){
-    return this.query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`; //  WHERE ${this.whereCondition} 
+    let baseQuery = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
+  
+    // Append WHERE clause if `whereCondition` is provided
+    if (this.whereCondition.trim()) {
+      baseQuery += ` WHERE ${this.whereCondition}`;
+    }    
+
+    return this.query = baseQuery;
   }
 
   // Function to remove a selected field from alias table and uncheck the associated checkbox
@@ -143,6 +150,7 @@ export class QueryBuilderComponent {
   }
 
   openSaveModal() {
+    console.log("this.finalquery() in side 153", this.finalquery())
     this.queryRelatedCodeService.saveQueryData.query = this.finalquery();
     this.queryRelatedCodeService.openSaveModal();
   }
