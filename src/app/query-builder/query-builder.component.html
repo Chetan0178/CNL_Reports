@@ -125,23 +125,30 @@
       
         <p>from</p>
         <textarea [(ngModel)]="selectedTablesForQuery" rows="1" cols="30" placeholder="Table list"></textarea>
+  
+        <!-- Conditional WHERE Clause Display -->
+        <div *ngIf="whereCondition.trim()">
+          <p>where</p>
+          <textarea [(ngModel)]="whereCondition" rows="2" cols="30" placeholder="WHERE condition"></textarea>
+        </div>
         
         <!-- Save Query Button -->
         <button (click)="openSaveModal()">Save Query</button>
         <button (click)="fetchData()">Execute Query</button>
-      </div>      
-    </table> 
-    <!-- Modal for saving query -->
-    <div *ngIf="queryRelatedCodeService.showModal" class="modal">
-      <div class="modal-content">
-          <span class="close" (click)="closeSaveModal()">&times;</span>
-          <h3>Save Query</h3>
-          <input type="text" [(ngModel)]="queryRelatedCodeService.saveQueryData.name" placeholder="Enter Name" required />
-          <input type="text" [(ngModel)]="queryRelatedCodeService.saveQueryData.query_id" placeholder="Enter Query ID" required />
-          <button (click)="saveQuery()">Submit</button>
-          <div *ngIf="queryRelatedCodeService.responseMessage" class="success">{{ queryRelatedCodeService.responseMessage }}</div>
       </div>
-    </div>   
+    </table>
+    <!-- Modal for saving query -->
+  <div *ngIf="queryRelatedCodeService.showModal" class="modal">
+    <div class="modal-content">
+        <span class="close" (click)="closeSaveModal()">&times;</span>
+        <h3>Save Query</h3>
+        <input type="text" [(ngModel)]="queryRelatedCodeService.saveQueryData.name" placeholder="Enter Name" required />
+        <input type="text" [(ngModel)]="queryRelatedCodeService.saveQueryData.query_id" placeholder="Enter Query ID" required />
+        <button (click)="saveQuery()">Submit</button>
+    <div *ngIf="queryRelatedCodeService.responseMessage" class="success">{{ queryRelatedCodeService.responseMessage }}</div>
+  </div>
+</div>
+
   </div>
 
   <div class="query-result-container">
