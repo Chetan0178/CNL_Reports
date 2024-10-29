@@ -128,8 +128,23 @@
         
         <!-- Save Query Button -->
         <button (click)="saveQuery()">Save Query</button>
-      </div>
-      
+        <button (click)="fetchData()">Execute Query</button>
+      </div>      
+    </table>    
+  </div>
+
+  <div class="query-result-container">
+    <table *ngIf="Q_Data.length" class="query-result-container-table">
+      <thead>
+          <tr class="query-result-container-tr">
+              <th *ngFor="let header of headers"  class="query-result-container-th">{{ header }}</th>
+          </tr>
+      </thead>
+      <tbody>
+          <tr *ngFor="let data of Q_Data" class="query-result-container-tr">
+              <td *ngFor="let header of headers"  class="query-result-container-td">{{ data[header] }}</td>
+          </tr>
+      </tbody>
     </table>
   </div>
 

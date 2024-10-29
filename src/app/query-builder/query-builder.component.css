@@ -16,6 +16,7 @@ button {
   transition: background-color 0.3s;
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-right: 20px;
 }
 
 button:hover {
@@ -273,4 +274,45 @@ h3 {
   border-radius: 4px;
   font-size: 14px;
   margin-top: 10px;
+}
+
+
+/* ======================== */
+
+.query-result-container{
+  margin-top: 20px;
+}
+/* Table styling */
+.query-result-container-table
+ {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.query-result-container-td .query-result-container-th {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 2px solid #e74c3c; /* Bold red border for table rows */
+}
+
+.query-result-container-th {
+  background-color: #FF6F61; /* Bold red header */
+  color: white;
+  position: sticky;   
+  top: 0; /* For sticky header */
+  transition: background-color 0.3s;
+}
+
+.query-result-container-th:hover {
+  background-color: #fc3620; /* Darker red on hover */
+}
+
+.query-result-container-tr:hover {
+  background-color: #f7c2c2; /* Light red for row hover effect */
+}
+
+/* Animation for table rows */
+tbody tr {
+  transition: background-color 0.3s;
 }

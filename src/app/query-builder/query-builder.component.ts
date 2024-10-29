@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { API_HOST } from '../../assets/api.config';
+import { QueryRelatedCodeService } from '../query-related-code.service';
 
 @Component({
   selector: 'app-query-builder',
@@ -16,12 +17,25 @@ export class QueryBuilderComponent {
   isLoading = false;
   whereCondition: string = '';  // Store WHERE input value
   joinCondition: string = '';   // Store JOIN input value
+  query: string = ''
+  Q_Data: any[] = [];
+  headers: string[] = []; // To hold the headers
 
   // Properties for main query preview and editing
   selectedColumnsListForQuery: string = ''; // User-editable selected columns
   selectedTablesForQuery: string = '';      // User-editable selected tables
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public queryRelatedCodeService: QueryRelatedCodeService) {}
+
+  ngOnInit(): void {
+    this.queryRelatedCodeService.Q_Data$.subscribe(data => {
+      this.Q_Data = data;
+    });
+
+    this.queryRelatedCodeService.headers$.subscribe(headers => {
+      this.headers = headers;
+    });
+  }
 
   loadTables() {
     this.isLoading = true;
@@ -133,12 +147,12 @@ export class QueryBuilderComponent {
   // Function to build the query and send it to the API
   saveQuery() {
     // Construct query using the editable inputs
-    const query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
-
-    console.log('Generated Query:', query); // Debugging output
+    console.log("select * from sales LIne 138:" ,this.query)
+    this.query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
+    console.log('Generated Query  LIne 140:', this.query); // Debugging output
 
     // Post the query to the specified endpoint
-    this.http.post(`${API_HOST}/api/save_query/`, { query: query }).subscribe({
+    this.http.post(`${API_HOST}/api/save_query/`, { query: this.query }).subscribe({
       next: (response) => {        
         console.log('Query saved successfully', response);
         alert('Query saved successfully');
@@ -148,4 +162,11 @@ export class QueryBuilderComponent {
       }
     });
   }
+
+  fetchData() {
+    this.query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
+    console.log("line 156", this.query)
+    this.queryRelatedCodeService.fetchData(this.query);    
+  }
+
 }
