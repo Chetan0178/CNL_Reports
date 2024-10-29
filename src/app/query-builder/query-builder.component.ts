@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { API_HOST } from '../../assets/api.config';
+import { QueryRelatedCodeService } from '../query-related-code.service';
 
 @Component({
   selector: 'app-query-builder',
@@ -16,12 +17,25 @@ export class QueryBuilderComponent {
   isLoading = false;
   whereCondition: string = '';  // Store WHERE input value
   joinCondition: string = '';   // Store JOIN input value
+  query: string = ''
+  Q_Data: any[] = [];
+  headers: string[] = []; // To hold the headers
 
   // Properties for main query preview and editing
   selectedColumnsListForQuery: string = ''; // User-editable selected columns
   selectedTablesForQuery: string = '';      // User-editable selected tables
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, public queryRelatedCodeService: QueryRelatedCodeService) {}
+
+  ngOnInit(): void {
+    this.queryRelatedCodeService.Q_Data$.subscribe(data => {
+      this.Q_Data = data;
+    });
+
+    this.queryRelatedCodeService.headers$.subscribe(headers => {
+      this.headers = headers;
+    });
+  }
 
   loadTables() {
     this.isLoading = true;
@@ -32,7 +46,7 @@ export class QueryBuilderComponent {
         this.isLoading = false;
       },
       (error) => {
-        this.showError('Error fetching tables');
+        this.showMessage('Error fetching tables');
         this.isLoading = false;
       }
     );
@@ -50,7 +64,7 @@ export class QueryBuilderComponent {
           this.updateMainQueryDisplay(); // Update main query on table selection
         },
         (error) => {
-          this.showError(`Error fetching columns for table: ${tableName}`);
+          this.showMessage(`Error fetching columns for table: ${tableName}`);
           this.isLoading = false;
         }
       );
@@ -59,13 +73,6 @@ export class QueryBuilderComponent {
       this.removeAllColumnsFromTable(tableName);
       this.updateMainQueryDisplay(); // Update main query on table deselection
     }
-  }
-
-  showError(message: string) {
-    this.errorMessage = message;
-    setTimeout(() => {
-      this.errorMessage = null;
-    }, 3000);
   }
 
   getSelectedColumnKeys(): string[] {
@@ -91,6 +98,11 @@ export class QueryBuilderComponent {
   updateAlias(column: string, event: any) {
     this.columnAliases[column] = event.target.value;
     this.updateMainQueryDisplay(); // Update main query when alias changes
+  }
+
+  // Construct query using the editable inputs
+  finalquery(){
+    return this.query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`; //  WHERE ${this.whereCondition} 
   }
 
   // Function to remove a selected field from alias table and uncheck the associated checkbox
@@ -130,22 +142,29 @@ export class QueryBuilderComponent {
     this.selectedTablesForQuery = Object.keys(this.selectedColumns).join(', ');
   }
 
+  openSaveModal() {
+    this.queryRelatedCodeService.saveQueryData.query = this.finalquery();
+    this.queryRelatedCodeService.openSaveModal();
+  }
+
+  closeSaveModal() {
+    this.queryRelatedCodeService.closeSaveModal();    
+  }
+
   // Function to build the query and send it to the API
   saveQuery() {
-    // Construct query using the editable inputs
-    const query = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
-
-    console.log('Generated Query:', query); // Debugging output
-
-    // Post the query to the specified endpoint
-    this.http.post(`${API_HOST}/api/save_query/`, { query: query }).subscribe({
-      next: (response) => {        
-        console.log('Query saved successfully', response);
-        alert('Query saved successfully');
-      },
-      error: (error) => {
-        this.showError('Error saving query');
-      }
-    });
+    this.queryRelatedCodeService.saveQuery();
   }
+
+  fetchData() {
+    this.queryRelatedCodeService.fetchData(this.finalquery());    
+  }
+
+  showMessage(message: string) {
+    this.errorMessage = message;
+    setTimeout(() => {
+      this.errorMessage = null;
+    }, 3000);
+  }
+
 }
