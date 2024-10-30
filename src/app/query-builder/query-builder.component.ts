@@ -30,6 +30,9 @@ export class QueryBuilderComponent {
   ngOnInit(): void {
     this.queryRelatedCodeService.Q_Data$.subscribe(data => {
       this.Q_Data = data;
+    this.queryRelatedCodeService.errorMessage$.subscribe(message => {
+      this.errorMessage = message;
+    });
     });
 
     this.queryRelatedCodeService.headers$.subscribe(headers => {
@@ -46,7 +49,7 @@ export class QueryBuilderComponent {
         this.isLoading = false;
       },
       (error) => {
-        this.showMessage('Error fetching tables');
+        this.queryRelatedCodeService.showMessage('Error fetching tables'); // Call service method to show message
         this.isLoading = false;
       }
     );
@@ -64,7 +67,8 @@ export class QueryBuilderComponent {
           this.updateMainQueryDisplay(); // Update main query on table selection
         },
         (error) => {
-          this.showMessage(`Error fetching columns for table: ${tableName}`);
+          this.queryRelatedCodeService.showMessage(`Error fetching columns for table: ${tableName}`); // Call service method to show message
+          // this.showMessage(`Error fetching columns for table: ${tableName}`);
           this.isLoading = false;
         }
       );
@@ -150,7 +154,6 @@ export class QueryBuilderComponent {
   }
 
   openSaveModal() {
-    console.log("this.finalquery() in side 153", this.finalquery())
     this.queryRelatedCodeService.saveQueryData.query = this.finalquery();
     this.queryRelatedCodeService.openSaveModal();
   }
@@ -168,11 +171,11 @@ export class QueryBuilderComponent {
     this.queryRelatedCodeService.fetchData(this.finalquery());    
   }
 
-  showMessage(message: string) {
-    this.errorMessage = message;
-    setTimeout(() => {
-      this.errorMessage = null;
-    }, 3000);
-  }
+  // showMessage(message: string) {
+  //   this.errorMessage = message;
+  //   setTimeout(() => {
+  //     this.errorMessage = null;
+  //   }, 3000);
+  // }
 
 }
