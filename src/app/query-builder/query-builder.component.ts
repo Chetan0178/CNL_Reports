@@ -171,11 +171,4 @@ export class QueryBuilderComponent {
     this.queryRelatedCodeService.fetchData(this.finalquery());    
   }
 
-  // showMessage(message: string) {
-  //   this.errorMessage = message;
-  //   setTimeout(() => {
-  //     this.errorMessage = null;
-  //   }, 3000);
-  // }
-
 }

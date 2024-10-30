@@ -50,6 +50,7 @@ export class QueryRelatedCodeService{
      this.http.post<any>(this.saveApiUrl, this.saveQueryData).subscribe(
       (response) => {
         this.responseMessage = 'Query saved successfully! Response: ' + JSON.stringify(response);
+        this.showMessage('Query saved successfully!');
         this.closeSaveModal(); // Optionally close the modal after saving
       },
       (error) => {
