@@ -11,12 +11,14 @@ export class QueryRelatedCodeService{
   query: string = ''; // Hold the user input query
   responseMessage: string = ''; // To hold the response message after saving
   showModal: boolean = false; // Control modal visibility
-  errorMessage: string = '';
   saveQueryData = {
     query: '',
     name: '',
     query_id: ''  
   }; // Data for saving the query
+  errorMessage: string | null = null;
+  private errorMessageSubject = new BehaviorSubject<string | null>(null);
+  errorMessage$ = this.errorMessageSubject.asObservable();
 
   private Q_DataSubject = new BehaviorSubject<any[]>([]);
   private headersSubject = new BehaviorSubject<string[]>([]);
@@ -48,11 +50,11 @@ export class QueryRelatedCodeService{
      this.http.post<any>(this.saveApiUrl, this.saveQueryData).subscribe(
       (response) => {
         this.responseMessage = 'Query saved successfully! Response: ' + JSON.stringify(response);
+        this.showMessage('Query saved successfully!');
         this.closeSaveModal(); // Optionally close the modal after saving
       },
       (error) => {
-        console.error('Error saving query:', error);
-        this.errorMessage = error.error?.error || 'Error saving Query data';
+        this.showMessage('Cannot saving the query');
       }
     );
   }
@@ -73,10 +75,18 @@ export class QueryRelatedCodeService{
       },
       (error) => {
         // Handle error as necessary
-        console.error(error);
+        this.showMessage('Cannot Fetch The Query Data');
+
       }
     );
   }
 
+  // Method to show error messages
+  showMessage(message: string) {
+    this.errorMessageSubject.next(message);
+    setTimeout(() => {
+      this.errorMessageSubject.next(null); // Clear message after timeout
+    }, 3000);
+  }
 
 }
