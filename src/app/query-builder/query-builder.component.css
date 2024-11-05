@@ -336,4 +336,8 @@ tbody tr {
 
 .relation-container {
   margin-top: 2%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 13in;
 }

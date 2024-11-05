@@ -102,11 +102,13 @@ export class QueryBuilderComponent {
     return this.selectedFields;
   }
 
+  // Method to toggle relation selection and load tables if needed
   toggleRelationSelection(relation: string, event: any) {
     const isChecked = event.target.checked;
 
     if (isChecked) {
       this.selectedRelations.push(relation);
+      this.loadTablesForRelation(relation);  // Load columns for tables in this relation
     } else {
       const index = this.selectedRelations.indexOf(relation);
       if (index > -1) {
@@ -114,7 +116,17 @@ export class QueryBuilderComponent {
       }
     }
 
-    this.updateJoinCondition();
+    this.updateJoinCondition();  // Update joinCondition after selection change
+  }
+
+  // Extract table names from relation and load columns for each table
+  loadTablesForRelation(relation: string) {
+    const tables = relation.split('=').map(part => part.trim().split('.')[0].trim());
+    tables.forEach(tableName => {
+      if (!this.selectedColumns[tableName]) {  // Only load if not already loaded
+        this.loadColumns(tableName, { target: { checked: true } });
+      }
+    });
   }
 
   updateJoinCondition() {
