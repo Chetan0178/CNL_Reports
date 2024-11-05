@@ -16,10 +16,12 @@ export class QueryBuilderComponent {
   errorMessage: string | null = null;
   isLoading = false;
   whereCondition: string = '';  // Store WHERE input value
-  joinCondition: string = '';   // Store JOIN input value
+  joinCondition: string = '';  // Updated: will store selected relations here
   query: string = ''
   Q_Data: any[] = [];
   headers: string[] = []; // To hold the headers
+  relations: string[] = [];  // Store all relations
+  selectedRelations: string[] = [];  // Track selected relations
 
   // Properties for main query preview and editing
   selectedColumnsListForQuery: string = ''; // User-editable selected columns
@@ -63,6 +65,7 @@ export class QueryBuilderComponent {
       this.http.get(columns_api_url).subscribe(
         (response: any) => {
           this.selectedColumns[tableName] = response.columns;
+          this.relations = response.Relation || []; // Assign relations from response
           this.isLoading = false;
           this.updateMainQueryDisplay(); // Update main query on table selection
         },
@@ -99,6 +102,25 @@ export class QueryBuilderComponent {
     return this.selectedFields;
   }
 
+  toggleRelationSelection(relation: string, event: any) {
+    const isChecked = event.target.checked;
+
+    if (isChecked) {
+      this.selectedRelations.push(relation);
+    } else {
+      const index = this.selectedRelations.indexOf(relation);
+      if (index > -1) {
+        this.selectedRelations.splice(index, 1);
+      }
+    }
+
+    this.updateJoinCondition();
+  }
+
+  updateJoinCondition() {
+    this.joinCondition = this.selectedRelations.join(' AND ');
+  }
+
   updateAlias(column: string, event: any) {
     this.columnAliases[column] = event.target.value;
     this.updateMainQueryDisplay(); // Update main query when alias changes
@@ -108,10 +130,15 @@ export class QueryBuilderComponent {
   finalquery(){
     let baseQuery = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
   
-    // Append WHERE clause if `whereCondition` is provided
+    // Append WHERE clause if `whereCondition` is provided    
+    if (this.joinCondition.trim()) {
+      baseQuery += ` JOIN ${this.joinCondition}`;
+    }  
+
+    // Append WHERE clause if `whereCondition` is provided   
     if (this.whereCondition.trim()) {
       baseQuery += ` WHERE ${this.whereCondition}`;
-    }    
+    }  
 
     return this.query = baseQuery;
   }
