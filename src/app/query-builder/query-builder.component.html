@@ -54,8 +54,34 @@
     </div>
   </div>
 
+  <!-- Relation container with checkboxes for each relation -->
+  <div class="relation-container" *ngIf="relations.length > 0">
+    <div class="relation_table">
+      <table>
+        <thead>
+          <tr>
+            <th>Select</th>
+            <th>Relations</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let relation of relations">
+            <td>
+              <input 
+                type="checkbox" 
+                (change)="toggleRelationSelection(relation, $event)" 
+                [checked]="selectedRelations.includes(relation)"
+              />
+            </td>
+            <td>{{ relation }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- Selected fields box -->
-  <div class="container-two" *ngIf="getSelectedColumnsList().length != 0">
+  <div class="container-two" >
     <!-- Selected Fields Table -->
     <table>
       <thead>
@@ -94,7 +120,7 @@
       </tbody>
     </table>
 
-    <!-- JOIN Table -->
+    <!-- JOIN Table displaying selected relations -->
     <table>
       <thead>
         <tr>
@@ -113,10 +139,9 @@
         </tr>
       </tbody>
     </table>
-    <!-- <p *ngIf="getSelectedColumnsList().length === 0">No fields selected.</p> -->
   </div>
 
-  <!-- Main Query Container   *ngIf="getSelectedColumnsList().length != 0"-->
+  <!-- Main Query Container -->
   <div class="main_query">
     <table class="main-tbl">
       <div class="main_query">
@@ -130,6 +155,12 @@
         <div *ngIf="whereCondition.trim()">
           <p>where</p>
           <textarea [(ngModel)]="whereCondition" rows="2" cols="30" placeholder="WHERE condition"></textarea>
+        </div>
+
+        <!-- JOIN Clause Display -->
+        <div *ngIf="joinCondition.trim()">
+          <p>join</p>
+          <textarea [(ngModel)]="joinCondition" rows="2" cols="30" placeholder="JOIN condition"></textarea>
         </div>
         
         <!-- Save Query Button -->

@@ -1,8 +1,7 @@
 .container {
-  display: flexbox;
+  display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* width: 50px; */
 }
 
 button {
@@ -14,9 +13,7 @@ button {
   font-size: 16px;
   cursor: pointer;
   transition: background-color 0.3s;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  margin-right: 20px;
+  margin: 1% 20px 10px 0;
 }
 
 button:hover {
@@ -25,19 +22,18 @@ button:hover {
 
 .container-one {
   display: flex;
-  flex-direction: row; /* Align items side by side */
-  gap: 20px; /* Space between table list and columns */
-  margin-top: 20px;
+  flex-direction: row;
+  gap: 20px;
+  margin-top: 2%;
 }
 
-/* Scrollable area for the main tables list */
 .table-list {
   overflow-y: auto;
   border: 1px solid #ccc;
   padding: 5px;
-  width: 210px; /* Fixed width of the main table list in pixels*/
-  height: 2in; /* Fixed height */
-  box-sizing: border-box; /* Include padding and border in the element's total width */
+  width: 210px;
+  height: 2in;
+  box-sizing: border-box;
 }
 
 ul {
@@ -60,21 +56,18 @@ input[type="checkbox"] {
   margin-right: 10px;
 }
 
-/* Flexbox to align column tables side by side */
 .columns-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px; /* Space between column tables */
-  margin-top: 0px;
+  gap: 20px;
   width: 13in;
 }
 
-/* Each individual column table */
 .column_table {
   border: 1px solid #ccc;
-  width: 2in; /* Width of each column table */
-  height: 2in; /* Fixed height for column tables */
-  overflow-y: auto; /* Scrollable if necessary */
+  width: 2in;
+  height: 2in;
+  overflow-y: auto;
   text-align: left;
 }
 
@@ -98,21 +91,20 @@ td input[type="checkbox"] {
   margin-right: 10px;
 }
 
-/* For column table titles */
 h3 {
   font-size: 14px;
   font-weight: bold;
-  margin: 0 0 5px 0;
+  margin: 0 0 5px;
 }
 
 .container-two {
-  margin-top: 20px;
+  margin-top: 2%;
   border: 1px solid #ccc;
   padding: 10px;
   width: 100%;
-  overflow-x: auto; /* Allows horizontal scrolling if needed */
+  overflow-x: auto;
   display: flex;
-   gap: 20px;    /* Space between Alias tables */
+  gap: 20px;
 }
 
 .container-two table {
@@ -120,29 +112,24 @@ h3 {
   border-collapse: collapse;
 }
 
-.container-two td
-{
+.container-two td,
+.container-two th {
   border: 1px solid #ccc;
   padding: 4px;
   text-align: left;
 }
 
 .container-two th {
-  border: 1px solid #ccc;
-  padding: 4px;
+  background-color: #f0f0f0;
   text-align: center;
-}
-
-.container-two th {
-  background-color: #f0f0f0; /* Light background for header */
 }
 
 .selected-field:hover .cancel-icon {
   color: red;
   cursor: pointer;
-  font-size: 18x;
-  display: inline-block; 
-  font: bold; 
+  font-size: 18px;
+  display: inline-block;
+  font-weight: bold;
 }
 
 .input-wrapper {
@@ -152,54 +139,60 @@ h3 {
 
 .container-two input[type="text"] {
   padding: 5px;
-  width: 80%; 
+  width: 80%;
   margin-left: 15px;
 }
 
-
 .error-message {
   position: fixed;
-  top: 20px;
-  right: -300px;
-  background-color: rgba(255, 0, 0, 0.8);
+  top: 1.5in;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(75, 232, 243, 0.8);
   color: white;
-  border: 2px solid #f5c6cb;
-  padding: 10px;
-  border-radius: 4px;
-  font-weight: bold;
-  animation: slideIn 0.8s forwards, fadeOut 0.8s 2.5s forwards;
+  padding: 15px;
+  border: 1px solid;
+  border-radius: 40px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  animation: slideDownElastic 1.0s forwards, fadeOut 0.5s 3.5s forwards, borderColorChange 2s infinite;
 }
 
-@keyframes slideIn {
-  from {
-    right: -300px;
+@keyframes slideDownElastic {
+  0% {
+    transform: translate(-50%, -30px);
+    opacity: 0;
   }
-  to {
-    right: 20px;
+  40% {
+    transform: translate(-50%, 5px);
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
   }
 }
 
 @keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
-/* Container for the main query */
+@keyframes borderColorChange {
+  0% { border-color: hsl(0, 100%, 50%); }
+  50% { border-color: hsl(303, 100%, 50%); }
+  100% { border-color: hsl(110, 69%, 50%); }
+}
+
 .main_query {
   background-color: #FF6F61;
   border-radius: 8px;
   padding: 16px;
-  margin-top: 20px;
+  margin-top: 2%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 90%;
-  max-width: 600px;  
+  max-width: 600px;
 }
 
-/* Styling for the 'select' and 'from' labels */
 .main_query p {
   font-size: 16px;
   font-weight: bold;
@@ -207,7 +200,6 @@ h3 {
   color: #34495e;
 }
 
-/* Styling for the textareas */
 .main_query textarea {
   width: 100%;
   min-height: 40px;
@@ -216,19 +208,18 @@ h3 {
   margin-bottom: 10px;
   border-radius: 4px;
   border: 1px solid #d1d8e0;
-  resize: vertical; /* Allows vertical resizing */
-  font-family: 'Courier New', Courier, monospace; /* Monospace font for SQL-like look */
+  resize: vertical;
+  font-family: 'Courier New', Courier, monospace;
   color: #2c3e50;
   background-color: #ffffff;
   outline: none;
 }
 
 .main_query textarea:focus {
-  border-color: #3498db; /* Blue highlight on focus */
+  border-color: #3498db;
   box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
 }
 
-/* Styling for the 'Save Query' button */
 .main_query button {
   background-color: #3498db;
   color: #ffffff;
@@ -241,7 +232,7 @@ h3 {
 }
 
 .main_query button:hover {
-  background-color: #2980b9; /* Darker blue on hover */
+  background-color: #2980b9;
 }
 
 .main_query button:focus {
@@ -249,7 +240,6 @@ h3 {
   box-shadow: 0 0 5px rgba(41, 128, 185, 0.4);
 }
 
-/* Loading spinner */
 .loading-spinner {
   display: inline-block;
   width: 24px;
@@ -266,58 +256,37 @@ h3 {
   100% { transform: rotate(360deg); }
 }
 
-/* Error message styling */
-.error-message {
-  color: #e74c3c;
-  background-color: #fdecea;
-  padding: 8px;
-  border-radius: 4px;
-  font-size: 14px;
-  margin-top: 10px;
+.query-result-container {
+  margin-top: 2%;
 }
 
-
-/* ======================== */
-
-.query-result-container{
-  margin-top: 20px;
-}
-/* Table styling */
-.query-result-container-table
- {
+.query-result-container-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.query-result-container-td .query-result-container-th {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 2px solid #e74c3c; /* Bold red border for table rows */
 }
 
 .query-result-container-th {
-  background-color: #FF6F61; /* Bold red header */
+  background-color: #FF6F61;
   color: white;
-  position: sticky;   
-  top: 0; /* For sticky header */
+  position: sticky;
+  top: 0;
   transition: background-color 0.3s;
+  padding: 12px;
+  text-align: left;
 }
 
 .query-result-container-th:hover {
-  background-color: #fc3620; /* Darker red on hover */
+  background-color: #fc3620;
 }
 
 .query-result-container-tr:hover {
-  background-color: #f7c2c2; /* Light red for row hover effect */
+  background-color: #f7c2c2;
 }
 
-/* Animation for table rows */
 tbody tr {
   transition: background-color 0.3s;
 }
 
-/* Modal styles */
 .modal {
   display: block;
   position: fixed;
@@ -326,17 +295,16 @@ tbody tr {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0); /* Change 0.8 to adjust transparency */
+  background-color: rgba(0, 0, 0, 0);
 }
-
 
 .modal-content {
   background-color: #fefefe;
   margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
-  width: 300px; /* Width of modal */
-  border-radius: 9px; /* Rounded corners */
+  width: 300px;
+  border-radius: 9px;
 }
 
 .close {
@@ -353,16 +321,19 @@ tbody tr {
   cursor: pointer;
 }
 
-/* Input field styling inside modal */
 .modal-content input {
-  width: calc(100% - 20px); /* Full width with padding */
+  width: calc(100% - 20px);
   padding: 10px;
   margin-bottom: 10px;
-  border: 2px solid #e74c3c; /* Red border */
+  border: 2px solid #e74c3c;
   border-radius: 4px;
   transition: border-color 0.3s;
 }
 
 .modal-content input:focus {
-  border-color: #c0392b; /* Darker red on focus */
+  border-color: #c0392b;
+}
+
+.relation-container {
+  margin-top: 2%;
 }
