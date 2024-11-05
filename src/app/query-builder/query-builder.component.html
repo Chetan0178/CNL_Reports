@@ -13,11 +13,7 @@
       <ul>
         <li *ngFor="let table of tables">
           <label>
-            <input 
-              type="checkbox" 
-              (change)="loadColumns(table, $event)" 
-              [attr.data-table]="table" 
-            />
+            <input type="checkbox" (change)="loadColumns(table, $event)" [attr.data-table]="table" />
             {{ table }}
           </label>
         </li>
@@ -38,12 +34,8 @@
             <tbody>
               <tr *ngFor="let column of selectedColumns[tableName]">
                 <td>
-                  <input 
-                    type="checkbox" 
-                    (change)="toggleColumnSelection(tableName, column, $event)" 
-                    [attr.data-table]="tableName" 
-                    [attr.data-column]="column" 
-                  />
+                  <input type="checkbox" (change)="toggleColumnSelection(tableName, column, $event)"
+                    [attr.data-table]="tableName" [attr.data-column]="column" />
                 </td>
                 <td>{{ column }}</td>
               </tr>
@@ -67,11 +59,8 @@
         <tbody>
           <tr *ngFor="let relation of relations">
             <td>
-              <input 
-                type="checkbox" 
-                (change)="toggleRelationSelection(relation, $event)" 
-                [checked]="selectedRelations.includes(relation)"
-              />
+              <input type="checkbox" (change)="toggleRelationSelection(relation, $event)"
+                [checked]="selectedRelations.includes(relation)" />
             </td>
             <td>{{ relation }}</td>
           </tr>
@@ -80,8 +69,8 @@
     </div>
   </div>
 
-  <!-- Selected fields box -->
-  <div class="container-two" >
+  <!-- Selected fields box *ngIf="getSelectedColumnsList().length != 0"-->
+  <div class="container-two">
     <!-- Selected Fields Table -->
     <table>
       <thead>
@@ -95,7 +84,8 @@
         <tr *ngFor="let field of getSelectedColumnsList()" class="selected-field">
           <td><span class="cancel-icon" (click)="removeSelectedField(field)">✖</span></td>
           <td><label>{{ field }} as</label></td>
-          <td><input type="text" [value]="columnAliases[field] || ''" (input)="updateAlias(field, $event)" placeholder="Alias (optional)" /></td>
+          <td><input type="text" [value]="columnAliases[field] || ''" (input)="updateAlias(field, $event)"
+              placeholder="Alias (optional)" /></td>
         </tr>
       </tbody>
     </table>
@@ -110,11 +100,7 @@
       <tbody>
         <tr>
           <td>
-            <input 
-              type="text" 
-              placeholder="Enter WHERE condition" 
-              [(ngModel)]="whereCondition" 
-            />
+            <input type="text" placeholder="Enter WHERE condition" [(ngModel)]="whereCondition" />
           </td>
         </tr>
       </tbody>
@@ -130,11 +116,7 @@
       <tbody>
         <tr>
           <td>
-            <input 
-              type="text" 
-              placeholder="Enter JOIN condition" 
-              [(ngModel)]="joinCondition" 
-            />
+            <input type="text" placeholder="Enter JOIN condition" [(ngModel)]="joinCondition" />
           </td>
         </tr>
       </tbody>
@@ -147,15 +129,9 @@
       <div class="main_query">
         <p>select</p>
         <textarea [(ngModel)]="selectedColumnsListForQuery" rows="3" cols="30" placeholder="Columns list"></textarea>
-      
+
         <p>from</p>
         <textarea [(ngModel)]="selectedTablesForQuery" rows="1" cols="30" placeholder="Table list"></textarea>
-  
-        <!-- Conditional WHERE Clause Display -->
-        <div *ngIf="whereCondition.trim()">
-          <p>where</p>
-          <textarea [(ngModel)]="whereCondition" rows="2" cols="30" placeholder="WHERE condition"></textarea>
-        </div>
 
         <!-- JOIN Clause Display -->
         <div *ngIf="joinCondition.trim()">
@@ -163,36 +139,44 @@
           <textarea [(ngModel)]="joinCondition" rows="2" cols="30" placeholder="JOIN condition"></textarea>
         </div>
         
+        <!-- Conditional WHERE Clause Display -->
+        <div *ngIf="whereCondition.trim()">
+          <p>where</p>
+          <textarea [(ngModel)]="whereCondition" rows="2" cols="30" placeholder="WHERE condition"></textarea>
+        </div>
+
         <!-- Save Query Button -->
         <button (click)="openSaveModal()">Save Query</button>
         <button (click)="fetchData()">Execute Query</button>
       </div>
     </table>
     <!-- Modal for saving query -->
-  <div *ngIf="queryRelatedCodeService.showModal" class="modal">
-    <div class="modal-content">
+    <div *ngIf="queryRelatedCodeService.showModal" class="modal">
+      <div class="modal-content">
         <span class="close" (click)="closeSaveModal()">&times;</span>
         <h3>Save Query</h3>
         <input type="text" [(ngModel)]="queryRelatedCodeService.saveQueryData.name" placeholder="Enter Name" required />
-        <input type="text" [(ngModel)]="queryRelatedCodeService.saveQueryData.query_id" placeholder="Enter Query ID" required />
+        <input type="text" [(ngModel)]="queryRelatedCodeService.saveQueryData.query_id" placeholder="Enter Query ID"
+          required />
         <button (click)="saveQuery()">Submit</button>
-    <div *ngIf="queryRelatedCodeService.responseMessage" class="success">{{ queryRelatedCodeService.responseMessage }}</div>
-  </div>
-</div>
+        <div *ngIf="queryRelatedCodeService.responseMessage" class="success">{{ queryRelatedCodeService.responseMessage
+          }}</div>
+      </div>
+    </div>
 
   </div>
 
   <div class="query-result-container">
     <table *ngIf="Q_Data.length" class="query-result-container-table">
       <thead>
-          <tr class="query-result-container-tr">
-              <th *ngFor="let header of headers"  class="query-result-container-th">{{ header }}</th>
-          </tr>
+        <tr class="query-result-container-tr">
+          <th *ngFor="let header of headers" class="query-result-container-th">{{ header }}</th>
+        </tr>
       </thead>
       <tbody>
-          <tr *ngFor="let data of Q_Data" class="query-result-container-tr">
-              <td *ngFor="let header of headers"  class="query-result-container-td">{{ data[header] }}</td>
-          </tr>
+        <tr *ngFor="let data of Q_Data" class="query-result-container-tr">
+          <td *ngFor="let header of headers" class="query-result-container-td">{{ data[header] }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
