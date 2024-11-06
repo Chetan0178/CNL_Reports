@@ -22,6 +22,7 @@ export class QueryBuilderComponent {
   headers: string[] = []; // To hold the headers
   relations: string[] = [];  // Store all relations
   selectedRelations: string[] = [];  // Track selected relations
+  selectedJoinType: string = ''; // New property to store the selected join type
 
   // Properties for main query preview and editing
   selectedColumnsListForQuery: string = ''; // User-editable selected columns
@@ -138,14 +139,14 @@ export class QueryBuilderComponent {
     this.updateMainQueryDisplay(); // Update main query when alias changes
   }
 
-  // Construct query using the editable inputs
-  finalquery(){
+  // Modify the final query construction to include the selected join type
+  finalquery() {
     let baseQuery = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
-  
-    // Append WHERE clause if `whereCondition` is provided    
-    if (this.joinCondition.trim()) {
-      baseQuery += ` JOIN ${this.joinCondition}`;
-    }  
+
+    // Append JOIN clause based on selected join type and condition
+    if (this.selectedJoinType && this.joinCondition.trim()) {
+      baseQuery += ` ${this.selectedJoinType} JOIN ${this.joinCondition}`;
+    }
 
     // Append WHERE clause if `whereCondition` is provided   
     if (this.whereCondition.trim()) {
@@ -181,7 +182,7 @@ export class QueryBuilderComponent {
     this.updateMainQueryDisplay(); // Update main query when columns are cleared
   }
 
-  // Function to update the main query display, editable by the user
+  // Update the query display method to include the selected join type
   updateMainQueryDisplay() {
     const selectedColumns = this.getSelectedColumnsList().map((column) => {
       return this.columnAliases[column] ? `${column} as ${this.columnAliases[column]}` : column;

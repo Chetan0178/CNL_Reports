@@ -5,8 +5,7 @@
   <!-- Button to load tables -->
   <button (click)="loadTables()">Load Tables</button>
   
-  <!-- Show loading message when data is being fetched -->
-  <div *ngIf="isLoading"></div>
+  
 
   <div class="container-one">
     <div *ngIf="tables.length > 0" class="table-list">
@@ -107,48 +106,49 @@
     </table>
 
     <!-- JOIN Table displaying selected relations -->
-    <table>
-      <thead>
-        <tr>
-          <th>JOIN Clause</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <input type="text" placeholder="Enter JOIN condition" [(ngModel)]="joinCondition" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Existing tables for Selected Fields and WHERE Clause -->
+    <!-- Replace JOIN Clause <table> with radio buttons for join types -->
+    <div class="join-options">
+      <p>Select Join Type:</p>
+      <label>
+        <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" value="INNER" /> Inner Join
+      </label>
+      <label>
+        <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" value="LEFT" /> Left Join
+      </label>
+      <label>
+        <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" value="RIGHT" /> Right Join
+      </label>
+      <label>
+        <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" value="CROSS" /> Cross Join
+      </label>
+    </div>
   </div>
 
   <!-- Main Query Container -->
   <div class="main_query">
     <table class="main-tbl">
-      <div class="main_query">
-        <p>select</p>
-        <textarea [(ngModel)]="selectedColumnsListForQuery" rows="3" cols="30" placeholder="Columns list"></textarea>
+      <p>Select</p>
+      <textarea [(ngModel)]="selectedColumnsListForQuery" rows="3" cols="10" placeholder="Columns list"></textarea>
 
-        <p>from</p>
-        <textarea [(ngModel)]="selectedTablesForQuery" rows="1" cols="30" placeholder="Table list"></textarea>
+      <p>From</p>
+      <textarea [(ngModel)]="selectedTablesForQuery" rows="1" cols="10" placeholder="Table list"></textarea>
 
-        <!-- JOIN Clause Display -->
-        <div *ngIf="joinCondition.trim()">
-          <p>join</p>
-          <textarea [(ngModel)]="joinCondition" rows="2" cols="30" placeholder="JOIN condition"></textarea>
-        </div>
-        
-        <!-- Conditional WHERE Clause Display -->
-        <div *ngIf="whereCondition.trim()">
-          <p>where</p>
-          <textarea [(ngModel)]="whereCondition" rows="2" cols="30" placeholder="WHERE condition"></textarea>
-        </div>
-
-        <!-- Save Query Button -->
-        <button (click)="openSaveModal()">Save Query</button>
-        <button (click)="fetchData()">Execute Query</button>
+      <!-- Display selected JOIN Clause if join type is selected -->
+      <div *ngIf="selectedJoinType && joinCondition.trim()">
+        <p>{{ selectedJoinType }} Join</p>
+        <textarea [(ngModel)]="joinCondition" rows="2" cols="30" placeholder="JOIN condition"></textarea>
       </div>
+      
+      <!-- Conditional WHERE Clause Display -->
+      <div *ngIf="whereCondition.trim()">
+        <p>where</p>
+        <textarea [(ngModel)]="whereCondition" rows="2" cols="30" placeholder="WHERE condition"></textarea>
+      </div>
+
+      <!-- Save Query Button -->
+      <button (click)="openSaveModal()">Save Query</button>
+      <button (click)="fetchData()">Execute Query</button>
     </table>
     <!-- Modal for saving query -->
     <div *ngIf="queryRelatedCodeService.showModal" class="modal">
