@@ -201,7 +201,7 @@ h3 {
 }
 
 .main_query textarea {
-  width: 100%;
+  width: 96%;
   min-height: 40px;
   font-size: 14px;
   padding: 8px;
@@ -340,4 +340,31 @@ tbody tr {
   flex-wrap: wrap;
   gap: 20px;
   width: 13in;
+}
+
+.join-options p {
+  font-weight: bold;
+  margin-bottom: 5px;
+  margin-top: 1px;
+}
+
+.join-options label {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+/* Hover effect for selected columns */
+.selected-field:hover {
+    background-color: #f7f7f7;
+    cursor: pointer;
+}
+
+/* Focus style for Join type radio buttons */
+.join-options input[type="radio"]:focus {
+    outline: 2px solid #3498db;
+}
+
+/* Smooth transition for modal appearance */
+.modal {
+    transition: opacity 0.3s ease;
 }
