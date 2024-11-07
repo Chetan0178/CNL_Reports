@@ -227,4 +227,8 @@ export class QueryBuilderComponent {
     this.queryRelatedCodeService.fetchData(this.finalquery());    
   }
 
+  resetPage() {
+    window.location.reload();
+  }  
+
 }
