@@ -4,8 +4,6 @@
 
   <!-- Button to load tables -->
   <button (click)="loadTables()">Load Tables</button>
-  
-  
 
   <div class="container-one">
     <div *ngIf="tables.length > 0" class="table-list">
@@ -139,7 +137,7 @@
         <p>{{ selectedJoinType }} Join</p>
         <textarea [(ngModel)]="joinCondition" rows="2" cols="30" placeholder="JOIN condition"></textarea>
       </div>
-      
+
       <!-- Conditional WHERE Clause Display -->
       <div *ngIf="whereCondition.trim()">
         <p>where</p>
@@ -163,7 +161,6 @@
           }}</div>
       </div>
     </div>
-
   </div>
 
   <div class="query-result-container">
