@@ -352,3 +352,19 @@ tbody tr {
   display: inline-block;
   margin-right: 10px;
 }
+
+/* Hover effect for selected columns */
+.selected-field:hover {
+    background-color: #f7f7f7;
+    cursor: pointer;
+}
+
+/* Focus style for Join type radio buttons */
+.join-options input[type="radio"]:focus {
+    outline: 2px solid #3498db;
+}
+
+/* Smooth transition for modal appearance */
+.modal {
+    transition: opacity 0.3s ease;
+}

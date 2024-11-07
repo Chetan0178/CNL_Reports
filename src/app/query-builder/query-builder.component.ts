@@ -106,31 +106,41 @@ export class QueryBuilderComponent {
   // Method to toggle relation selection and load tables if needed
   toggleRelationSelection(relation: string, event: any) {
     const isChecked = event.target.checked;
-
     if (isChecked) {
-      this.selectedRelations.push(relation);
-      this.loadTablesForRelation(relation);  // Load columns for tables in this relation
+        // Extract table names and format as "table_name ON relation"
+        const [leftTable, rightTable] = relation.split('=').map(part => part.split('.')[0].trim());
+        const formattedRelation = `${rightTable} ON ${relation.trim()}`; // Format relation with "ON"
+        
+        // Only add formattedRelation if it doesn’t already exist
+        if (!this.selectedRelations.includes(formattedRelation)) {
+            this.selectedRelations.push(formattedRelation);
+        }
+
+        this.updateJoinCondition();  // Update joinCondition after selection change
+        this.loadTablesForRelation(relation);  // Load columns for tables in this relation if needed
     } else {
-      const index = this.selectedRelations.indexOf(relation);
-      if (index > -1) {
-        this.selectedRelations.splice(index, 1);
-      }
+        // Remove relation from selectedRelations if unchecked
+        const index = this.selectedRelations.indexOf(relation);
+        if (index > -1) {
+            this.selectedRelations.splice(index, 1);
+        }
+        this.updateJoinCondition();  // Update joinCondition after deselection
     }
+ }
 
-    this.updateJoinCondition();  // Update joinCondition after selection change
-  }
 
-  // Extract table names from relation and load columns for each table
-  loadTablesForRelation(relation: string) {
-    const tables = relation.split('=').map(part => part.trim().split('.')[0].trim());
-    tables.forEach(tableName => {
-      if (!this.selectedColumns[tableName]) {  // Only load if not already loaded
-        this.loadColumns(tableName, { target: { checked: true } });
+ loadTablesForRelation(relation: string) {
+  const tables = relation.split('=').map(part => part.trim().split('.')[0].trim());
+  tables.forEach(tableName => {
+      // Check if the table is already in the selectedColumns list
+      if (!this.selectedColumns[tableName]) {  
+          this.loadColumns(tableName, { target: { checked: true } });
       }
     });
   }
 
   updateJoinCondition() {
+    // Join all formatted join conditions with "AND" for display in the textarea
     this.joinCondition = this.selectedRelations.join(' AND ');
   }
 
@@ -141,6 +151,10 @@ export class QueryBuilderComponent {
 
   // Modify the final query construction to include the selected join type
   finalquery() {
+    if (!this.selectedColumnsListForQuery || !this.selectedTablesForQuery) {
+      return ''; // Ensure tables/columns are selected
+    }
+
     let baseQuery = `SELECT ${this.selectedColumnsListForQuery} FROM ${this.selectedTablesForQuery}`;
 
     // Append JOIN clause based on selected join type and condition
@@ -153,7 +167,8 @@ export class QueryBuilderComponent {
       baseQuery += ` WHERE ${this.whereCondition}`;
     }  
 
-    return this.query = baseQuery;
+    this.query = baseQuery; // Update preview variable
+    return this.query;
   }
 
   // Function to remove a selected field from alias table and uncheck the associated checkbox
@@ -185,13 +200,14 @@ export class QueryBuilderComponent {
   // Update the query display method to include the selected join type
   updateMainQueryDisplay() {
     const selectedColumns = this.getSelectedColumnsList().map((column) => {
-      return this.columnAliases[column] ? `${column} as ${this.columnAliases[column]}` : column;
+        return this.columnAliases[column] ? `${column} as ${this.columnAliases[column]}` : column;
     });
     this.selectedColumnsListForQuery = selectedColumns.join(', ');
 
-    // Get selected tables from selectedColumns keys
-    this.selectedTablesForQuery = Object.keys(this.selectedColumns).join(', ');
-  }
+    // Get selected tables from selectedColumns keys and ensure uniqueness
+    const selectedTables = new Set(Object.keys(this.selectedColumns));
+    this.selectedTablesForQuery = Array.from(selectedTables).join(', ');
+   }
 
   openSaveModal() {
     this.queryRelatedCodeService.saveQueryData.query = this.finalquery();
