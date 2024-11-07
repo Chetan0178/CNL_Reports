@@ -2,8 +2,11 @@
   <!-- Notification label for error messages -->
   <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-  <!-- Button to load tables -->
-  <button (click)="loadTables()">Load Tables</button>
+  <div class="button-container">
+    <!-- Button to load tables -->
+    <button (click)="loadTables()">Load Tables</button>   
+    <button (click)="resetPage()" class="reset-button">Reset</button>
+  </div>
 
   <div class="container-one">
     <div *ngIf="tables.length > 0" class="table-list">
