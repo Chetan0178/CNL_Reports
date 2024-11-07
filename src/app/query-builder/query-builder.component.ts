@@ -203,11 +203,11 @@ export class QueryBuilderComponent {
         return this.columnAliases[column] ? `${column} as ${this.columnAliases[column]}` : column;
     });
     this.selectedColumnsListForQuery = selectedColumns.join(', ');
-
-    // Get selected tables from selectedColumns keys and ensure uniqueness
-    const selectedTables = new Set(Object.keys(this.selectedColumns));
-    this.selectedTablesForQuery = Array.from(selectedTables).join(', ');
-   }
+      
+    // Update to only display the first selected table
+    const selectedTables = Object.keys(this.selectedColumns);
+    this.selectedTablesForQuery = selectedTables.length > 0 ? selectedTables[0] : ''; // Only take the first table
+  }  
 
   openSaveModal() {
     this.queryRelatedCodeService.saveQueryData.query = this.finalquery();
