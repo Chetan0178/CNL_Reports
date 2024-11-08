@@ -232,4 +232,8 @@ export class QueryBuilderComponent {
     window.location.reload();
   }  
 
+  // Method to remove a specific table's columns from the selectedColumns list
+  removeColumnTable(tableName: string) {
+    delete this.selectedColumns[tableName];
+  }
 }

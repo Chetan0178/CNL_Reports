@@ -24,6 +24,8 @@
     <div class="columns-container" *ngIf="getSelectedColumnKeys().length > 0">
       <div *ngFor="let tableName of getSelectedColumnKeys()">
         <div class="column_table">
+          <!-- Close icon for each column table, only visible on hover -->
+          <span class="close-columns" (click)="removeColumnTable(tableName)">✖</span>
           <table>
             <thead>
               <tr>
