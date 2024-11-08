@@ -113,19 +113,33 @@
     <!-- Existing tables for Selected Fields and WHERE Clause -->
     <!-- Replace JOIN Clause <table> with radio buttons for join types -->
     <div class="join-options">
-      <p>Select Join Type:</p>
-      <label>
-        <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" value="INNER" /> Inner Join
-      </label>
-      <label>
-        <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" value="LEFT" /> Left Join
-      </label>
-      <label>
-        <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" value="RIGHT" /> Right Join
-      </label>
-      <label>
-        <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" value="CROSS" /> Cross Join
-      </label>
+      <table>
+        <thead>
+          <tr>
+            <th>Join Clause</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="radio-group">
+                <div class="left-side">
+                  <!-- Loop over the first 2 options (INNER and LEFT) -->
+                  <label *ngFor="let option of joinOptions.slice(0, 2)">
+                    <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" [value]="option.value" /> {{ option.label }}
+                  </label>
+                </div>
+                <div class="right-side">
+                  <!-- Loop over the last 2 options (RIGHT and CROSS) -->
+                  <label *ngFor="let option of joinOptions.slice(2)">
+                    <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" [value]="option.value" /> {{ option.label }}
+                  </label>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 

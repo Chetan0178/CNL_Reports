@@ -142,6 +142,21 @@ h3 {
   text-align: center;
 }
 
+.join-options .radio-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.join-options .left-side,
+.join-options .right-side {
+  display: flex;
+  flex-direction: column;
+}
+
+.join-options label {
+  margin-bottom: 8px;
+}
+
 .selected-field:hover .cancel-icon {
   color: red;
   cursor: pointer;

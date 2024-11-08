@@ -22,12 +22,20 @@ export class QueryBuilderComponent {
   headers: string[] = []; // To hold the headers
   relations: string[] = [];  // Store all relations
   selectedRelations: string[] = [];  // Track selected relations
-  selectedJoinType: string = ''; // New property to store the selected join type
+  selectedJoinType: string = 'INNER'; // New property to store the selected join type
   showRelationsTable = true; // to track whether the relations table is visible.
 
   // Properties for main query preview and editing
   selectedColumnsListForQuery: string = ''; // User-editable selected columns
   selectedTablesForQuery: string = '';      // User-editable selected tables
+
+  // Array of join options
+  joinOptions = [
+    { value: 'INNER', label: 'Inner Join' },
+    { value: 'LEFT', label: 'Left Join' },
+    { value: 'RIGHT', label: 'Right Join' },
+    { value: 'CROSS', label: 'Cross Join' }
+  ];
 
   constructor(private http: HttpClient, public queryRelatedCodeService: QueryRelatedCodeService) {}
 
@@ -69,17 +77,19 @@ export class QueryBuilderComponent {
           this.selectedColumns[tableName] = response.columns;
           this.relations = response.Relation || []; // Assign relations from response
           this.isLoading = false;
+          this.showRelationsTable = true; // Show relations table when a table is selected
           this.updateMainQueryDisplay(); // Update main query on table selection
         },
         (error) => {
-          this.queryRelatedCodeService.showMessage(`Error fetching columns for table: ${tableName}`); // Call service method to show message
-          // this.showMessage(`Error fetching columns for table: ${tableName}`);
+          this.queryRelatedCodeService.showMessage(`Error fetching columns for table: ${tableName}`);
           this.isLoading = false;
         }
       );
     } else {
       delete this.selectedColumns[tableName];
       this.removeAllColumnsFromTable(tableName);
+      // Check if there are any selected tables left
+      this.showRelationsTable = Object.keys(this.selectedColumns).length > 0;      
       this.updateMainQueryDisplay(); // Update main query on table deselection
     }
   }
@@ -108,26 +118,24 @@ export class QueryBuilderComponent {
   toggleRelationSelection(relation: string, event: any) {
     const isChecked = event.target.checked;
     if (isChecked) {
-        // Extract table names and format as "table_name ON relation"
-        const [leftTable, rightTable] = relation.split('=').map(part => part.split('.')[0].trim());
-        const formattedRelation = `${rightTable} ON ${relation.trim()}`; // Format relation with "ON"
-        
-        // Only add formattedRelation if it doesn’t already exist
-        if (!this.selectedRelations.includes(formattedRelation)) {
-            this.selectedRelations.push(formattedRelation);
-        }
-
-        this.updateJoinCondition();  // Update joinCondition after selection change
-        this.loadTablesForRelation(relation);  // Load columns for tables in this relation if needed
+      const [leftTable, rightTable] = relation.split('=').map(part => part.split('.')[0].trim());
+      const formattedRelation = `${rightTable} ON ${relation.trim()}`;  
+      if (!this.selectedRelations.includes(formattedRelation)) {
+        this.selectedRelations.push(formattedRelation);
+      }  
+      this.showRelationsTable = Object.keys(this.selectedColumns).length > 0; // Show relations table if tables are selected
+      this.updateJoinCondition();  
+      this.loadTablesForRelation(relation);  
     } else {
-        // Remove relation from selectedRelations if unchecked
-        const index = this.selectedRelations.indexOf(relation);
-        if (index > -1) {
-            this.selectedRelations.splice(index, 1);
-        }
-        this.updateJoinCondition();  // Update joinCondition after deselection
+      const index = this.selectedRelations.indexOf(relation);
+      if (index > -1) {
+        this.selectedRelations.splice(index, 1);
+      }      
+      // Hide relations table if no tables or relations are selected
+      this.showRelationsTable = this.selectedRelations.length > 0 && Object.keys(this.selectedColumns).length > 0;
+      this.updateJoinCondition();  
     }
- }
+  }  
 
 
  loadTablesForRelation(relation: string) {
