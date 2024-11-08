@@ -23,6 +23,7 @@ export class QueryBuilderComponent {
   relations: string[] = [];  // Store all relations
   selectedRelations: string[] = [];  // Track selected relations
   selectedJoinType: string = ''; // New property to store the selected join type
+  showRelationsTable = true; // to track whether the relations table is visible.
 
   // Properties for main query preview and editing
   selectedColumnsListForQuery: string = ''; // User-editable selected columns
