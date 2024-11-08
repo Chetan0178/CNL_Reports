@@ -46,9 +46,10 @@
     </div>
   </div>
 
-  <!-- Relation container with checkboxes for each relation -->
-  <div class="relation-container" *ngIf="relations.length > 0">
+  <!-- Relation container with checkboxes for each relation and close icon inside the relation_table -->
+  <div class="relation-container" *ngIf="showRelationsTable && relations.length > 0">
     <div class="relation_table">
+      <span class="close-icon" (click)="showRelationsTable = false">✖</span> <!-- Close Icon Inside the Table Header -->
       <table>
         <thead>
           <tr>
