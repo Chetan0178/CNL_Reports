@@ -29,6 +29,11 @@ export class QueryBuilderComponent {
   selectedColumnsListForQuery: string = ''; // User-editable selected columns
   selectedTablesForQuery: string = '';      // User-editable selected tables
 
+  // New properties for GROUP BY and ORDER BY clauses
+  groupByColumns: string = '';  // Stores GROUP BY input
+  orderByColumns: string = '';  // Stores ORDER BY input
+  orderDirection: string = 'ASC'; // Default to ASC
+
   // Array of join options
   joinOptions = [
     { value: 'INNER', label: 'Inner Join' },
@@ -42,9 +47,10 @@ export class QueryBuilderComponent {
   ngOnInit(): void {
     this.queryRelatedCodeService.Q_Data$.subscribe(data => {
       this.Q_Data = data;
-    this.queryRelatedCodeService.errorMessage$.subscribe(message => {
-      this.errorMessage = message;
     });
+
+    this.queryRelatedCodeService.errorMessage$.subscribe(message => {
+      this.errorMessage = message;    
     });
 
     this.queryRelatedCodeService.headers$.subscribe(headers => {
@@ -175,6 +181,16 @@ export class QueryBuilderComponent {
     if (this.whereCondition.trim()) {
       baseQuery += ` WHERE ${this.whereCondition}`;
     }  
+    
+    // Append WHERE clause if `whereCondition` is provided   
+    if (this.groupByColumns.trim()) {
+      baseQuery += ` GROUP BY ${this.groupByColumns}`;
+    } 
+
+    // Append ORDER BY clause if `orderByColumns` And 'orderDirection' is provided   
+    if (this.orderByColumns.trim()) {
+      baseQuery += ` ORDER BY ${this.orderByColumns} ${this.orderDirection}`;
+    } 
 
     this.query = baseQuery; // Update preview variable
     return this.query;

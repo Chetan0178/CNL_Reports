@@ -75,39 +75,43 @@
   <!-- Selected fields box *ngIf="getSelectedColumnsList().length != 0"-->
   <div class="container-two">
     <!-- Selected Fields Table -->
-    <table>
-      <thead>
-        <tr>
-          <th>Action</th>
-          <th>Field Name</th>
-          <th>Alias</th>
-        </tr>
-      </thead>
-      <tbody *ngIf="getSelectedColumnsList().length > 0">
-        <tr *ngFor="let field of getSelectedColumnsList()" class="selected-field">
-          <td><span class="cancel-icon" (click)="removeSelectedField(field)">✖</span></td>
-          <td><label>{{ field }} as</label></td>
-          <td><input type="text" [value]="columnAliases[field] || ''" (input)="updateAlias(field, $event)"
-              placeholder="Alias (optional)" /></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="Alias-options">
+      <table>
+        <thead>
+          <tr>
+            <th>Action</th>
+            <th>Field Name</th>
+            <th>Alias</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="getSelectedColumnsList().length > 0">
+          <tr *ngFor="let field of getSelectedColumnsList()" class="selected-field">
+            <td><span class="cancel-icon" (click)="removeSelectedField(field)">✖</span></td>
+            <td><label>{{ field }} as</label></td>
+            <td><input type="text" [value]="columnAliases[field] || ''" (input)="updateAlias(field, $event)"
+                placeholder="Alias (optional)" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- WHERE Table -->
-    <table>
-      <thead>
-        <tr>
-          <th>WHERE Clause</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            <input type="text" placeholder="Enter WHERE condition" [(ngModel)]="whereCondition" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="WHERE-options">
+      <table>
+        <thead>
+          <tr>
+            <th>WHERE Clause</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input type="text" placeholder="Enter WHERE condition" [(ngModel)]="whereCondition" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- JOIN Table displaying selected relations -->
     <!-- Existing tables for Selected Fields and WHERE Clause -->
@@ -141,6 +145,48 @@
         </tbody>
       </table>
     </div>
+
+    <!-- GROUP BY Table -->
+    <div class="GROUP-BY-options">
+      <table>
+        <thead>
+          <tr>
+            <th>GROUP BY Clause</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <input type="text" placeholder="Enter GROUP BY columns" [(ngModel)]="groupByColumns" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ORDER BY Table -->
+    <div class="ORDER-BY-options">
+      <table>
+        <thead>
+          <tr>
+            <th>ORDER BY Clause</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <!-- Textarea for entering columns -->
+              <textarea placeholder="Enter ORDER BY columns" [(ngModel)]="orderByColumns"></textarea>
+              <!-- Dropdown for selecting ASC or DESC -->
+              <select [(ngModel)]="orderDirection">
+                <option value="ASC">ASC</option>
+                <option value="DESC">DESC</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div> 
   </div>
 
   <!-- Main Query Container -->
@@ -162,6 +208,18 @@
       <div *ngIf="whereCondition.trim()">
         <p>where</p>
         <textarea [(ngModel)]="whereCondition" rows="2" cols="30" placeholder="WHERE condition"></textarea>
+      </div>
+
+      <!-- Conditional GROUP BY Clause Display -->
+      <div *ngIf="groupByColumns.trim()">
+        <p>GROUP BY</p>
+        <textarea [(ngModel)]="groupByColumns" rows="2" cols="30" placeholder="GROUP BY condition"></textarea>
+      </div>
+
+      <!-- Conditional GROUP BY Clause Display -->
+      <div *ngIf="orderByColumns.trim()">
+        <p>ORDER BY</p>
+        <textarea [(ngModel)]="orderByColumns" rows="2" cols="30" placeholder="GROUP BY condition"></textarea>
       </div>
 
       <!-- Save Query Button -->
