@@ -122,11 +122,35 @@ h3 {
   width: 100%;
   overflow-x: auto;
   display: flex;
-  gap: 20px;
+  flex-wrap: wrap; /* Allows items to wrap onto new lines */
+  gap: 20px; /* Spacing between the elements */
 }
 
-.container-two table {
-  width: 40%;
+/* Style for the individual sections (Alias-options, WHERE-options, etc.) */
+.Alias-options, 
+.WHERE-options, 
+.join-options, 
+.GROUP-BY-options, 
+.ORDER-BY-options {
+  flex: 1 1 45%; /* Allows the divs to grow and shrink, with a minimum width of 45% */
+  box-sizing: border-box; /* Makes sure padding and borders don't affect the width */
+}
+
+/* Additional customization for some divs to align on the left or right */
+.Alias-options, 
+.WHERE-options {
+  order: 1; /* These divs will stay at the start (left) */
+}
+
+.join-options, 
+.GROUP-BY-options, 
+.ORDER-BY-options{
+  order: 2; /* These divs will go to the right */
+}
+
+
+.Alias-options {
+  width: 100%;
   border-collapse: collapse;
 }
 
@@ -172,7 +196,7 @@ h3 {
 
 .container-two input[type="text"] {
   padding: 5px;
-  width: 80%;
+  width: 90%;
   margin-left: 15px;
 }
 
@@ -419,4 +443,68 @@ tbody tr {
 
 .relation_table:hover .close-icon {
   opacity: 100; /* Show icon on hover */
+}
+
+  /* Table styling */
+.ORDER-BY-options table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1px;
+}
+
+.ORDER-BY-options th {
+  background-color: #f4f4f4;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  font-weight: bold;
+}
+
+.ORDER-BY-options td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.ORDER-BY-options td input,
+.ORDER-BY-options td select,
+.ORDER-BY-options td textarea {
+  width: 80%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Styling for the textarea */
+.ORDER-BY-options td textarea {
+  min-height: 10px;
+  resize: vertical, horizontal;
+}
+
+/* Styling for the select dropdown */
+.ORDER-BY-options td select {
+  width: auto;
+  padding: 8px;
+  margin-left: 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  ;
+}
+
+/* Adding some spacing between the columns */
+.ORDER-BY-options td {
+  vertical-align: top;
+}
+
+/* Simple responsive behavior */
+@media (max-width: 768px) {
+  .ORDER-BY-options table {
+    width: 100%;
+  }
+
+  .ORDER-BY-options td input,
+  .ORDER-BY-options td select,
+  .ORDER-BY-options td textarea {
+    width: 10%;
+  }
 }
