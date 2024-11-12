@@ -16,6 +16,7 @@ export class QueryBuilderComponent {
   errorMessage: string | null = null;
   isLoading = false;
   whereCondition: string = '';  // Store WHERE input value
+  HavingCondition : string = ''; // Store HAVING input value
   joinCondition: string = '';  // Updated: will store selected relations here
   query: string = ''
   Q_Data: any[] = [];
@@ -32,7 +33,7 @@ export class QueryBuilderComponent {
   // New properties for GROUP BY and ORDER BY clauses
   groupByColumns: string = '';  // Stores GROUP BY input
   orderByColumns: string = '';  // Stores ORDER BY input
-  orderDirection: string = 'ASC'; // Default to ASC
+  orderDirections: { [columnName: string]: string } = {}; // Store order direction for each field
 
   // New property to store selected aggregation functions
   aggregationFunctions: { [columnName: string]: string } = {}; 
@@ -190,10 +191,15 @@ export class QueryBuilderComponent {
       baseQuery += ` GROUP BY ${this.groupByColumns}`;
     } 
 
-    // Append ORDER BY clause if `orderByColumns` And 'orderDirection' is provided   
-    if (this.orderByColumns.trim()) {
-      baseQuery += ` ORDER BY ${this.orderByColumns} ${this.orderDirection}`;
+    // Append HAVING clause if `HavingCondition` is provided   
+    if (this.HavingCondition.trim()) {
+      baseQuery += ` WHERE ${this.HavingCondition}`;
     } 
+
+    this.generateOrderByClause();
+    if (this.orderByColumns.length > 0) {
+      baseQuery += ` ORDER BY ${this.orderByColumns}`;
+    }
 
     this.query = baseQuery; // Update preview variable
     return this.query;
@@ -240,7 +246,24 @@ export class QueryBuilderComponent {
     // Update to only display the first selected table
     const selectedTables = Object.keys(this.selectedColumns);
     this.selectedTablesForQuery = selectedTables.length > 0 ? selectedTables[0] : ''; // Only take the first table
+
+    // Generate and update ORDER BY clause
+    this.generateOrderByClause(); // Update orderByColumns with the latest order directions
   }  
+
+  //Method for creatre order by statements
+  generateOrderByClause() {
+    // Construct the ORDER BY clause by including each field's order direction
+    const orderByEntries = Object.keys(this.orderDirections)
+      .filter(column => this.orderDirections[column]) // Only include columns with a specified order direction
+      .map(column => `${column} ${this.orderDirections[column]}`);
+    
+    // Update orderByColumns to show in the main query section
+    this.orderByColumns = orderByEntries.join(', ');
+    
+    // Return the orderByColumns
+    return this.orderByColumns;
+  }
 
   openSaveModal() {
     this.queryRelatedCodeService.saveQueryData.query = this.finalquery();

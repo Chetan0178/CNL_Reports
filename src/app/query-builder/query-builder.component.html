@@ -83,15 +83,14 @@
             <th>Field Name</th>
             <th>Alias</th>
             <th>Aggre. Func.</th>
+            <th>Order By</th> <!-- Added column for Order By -->
           </tr>
         </thead>
         <tbody *ngIf="getSelectedColumnsList().length > 0">
           <tr *ngFor="let field of getSelectedColumnsList()" class="selected-field">
             <td><span class="cancel-icon" (click)="removeSelectedField(field)">✖</span></td>
             <td><label>{{ field }} as</label></td>
-            <td><input type="text" [value]="columnAliases[field] || ''" (input)="updateAlias(field, $event)"
-                placeholder="Alias (optional)" /></td>
-            <!-- New Aggre. Func. column with dropdown -->
+            <td><input type="text" [value]="columnAliases[field] || ''" (input)="updateAlias(field, $event)" placeholder="Alias (optional)" /></td>
             <td>
               <select [(ngModel)]="aggregationFunctions[field]" (change)="updateMainQueryDisplay()">
                 <option value="">None</option>
@@ -102,95 +101,9 @@
                 <option value="MAX">MAX()</option>
               </select>
             </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- WHERE Table -->
-    <div class="WHERE-options">
-      <table>
-        <thead>
-          <tr>
-            <th>WHERE Clause</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
             <td>
-              <input type="text" placeholder="Enter WHERE condition" [(ngModel)]="whereCondition" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- JOIN Table displaying selected relations -->
-    <!-- Existing tables for Selected Fields and WHERE Clause -->
-    <!-- Replace JOIN Clause <table> with radio buttons for join types -->
-    <div class="join-options">
-      <table>
-        <thead>
-          <tr>
-            <th>Join Clause</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="radio-group">
-                <div class="left-side">
-                  <!-- Loop over the first 2 options (INNER and LEFT) -->
-                  <label *ngFor="let option of joinOptions.slice(0, 2)">
-                    <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" [value]="option.value" /> {{ option.label }}
-                  </label>
-                </div>
-                <div class="right-side">
-                  <!-- Loop over the last 2 options (RIGHT and CROSS) -->
-                  <label *ngFor="let option of joinOptions.slice(2)">
-                    <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" [value]="option.value" /> {{ option.label }}
-                  </label>
-                </div>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- GROUP BY Table -->
-    <div class="GROUP-BY-options">
-      <table>
-        <thead>
-          <tr>
-            <th>GROUP BY Clause</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <input type="text" placeholder="Enter GROUP BY columns" [(ngModel)]="groupByColumns" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- ORDER BY Table -->
-    <div class="ORDER-BY-options">
-      <table>
-        <thead>
-          <tr>
-            <th>ORDER BY Clause</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <!-- Textarea for entering columns -->
-              <textarea placeholder="Enter ORDER BY columns" [(ngModel)]="orderByColumns"></textarea>
-              <!-- Dropdown for selecting ASC or DESC -->
-              <select [(ngModel)]="orderDirection">
+              <select [(ngModel)]="orderDirections[field]" (change)="updateMainQueryDisplay()">
+                <option value="">None</option>
                 <option value="ASC">ASC</option>
                 <option value="DESC">DESC</option>
               </select>
@@ -198,8 +111,97 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  
+    <!-- Options Sections (2 columns layout) -->
+    <div class="options-grid">
+      <!-- WHERE Table -->
+      <div class="WHERE-options">
+        <table>
+          <thead>
+            <tr>
+              <th>WHERE Clause</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="text" placeholder="Enter WHERE condition" [(ngModel)]="whereCondition" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- JOIN Table -->
+      <div class="join-options">
+        <table>
+          <thead>
+            <tr>
+              <th>Join Clause</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="radio-group">
+                  <div class="left-side">
+                    <label *ngFor="let option of joinOptions.slice(0, 2)">
+                      <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" [value]="option.value" /> {{ option.label }}
+                    </label>
+                  </div>
+                  <div class="right-side">
+                    <label *ngFor="let option of joinOptions.slice(2)">
+                      <input type="radio" name="joinType" [(ngModel)]="selectedJoinType" [value]="option.value" /> {{ option.label }}
+                    </label>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  
+    <!-- Options Sections (2 columns layout) -->
+    <div class="options-grid">
+      <!-- GROUP BY Table -->
+      <div class="GROUP-BY-options">
+        <table>
+          <thead>
+            <tr>
+              <th>GROUP BY Clause</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="text" placeholder="Enter GROUP BY columns" [(ngModel)]="groupByColumns" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+  
+      <!-- HAVING Table -->
+      <div class="Having-options">
+        <table>
+          <thead>
+            <tr>
+              <th>HAVING Clause</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <input type="text" placeholder="Enter HAVING condition" [(ngModel)]="HavingCondition" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div> 
-  </div>
+  </div>  
 
   <!-- Main Query Container -->
   <div class="main_query">
@@ -228,10 +230,16 @@
         <textarea [(ngModel)]="groupByColumns" rows="2" cols="30" placeholder="GROUP BY condition"></textarea>
       </div>
 
-      <!-- Conditional GROUP BY Clause Display -->
+      <!-- Conditional WHERE Clause Display -->
+      <div *ngIf="HavingCondition.trim()">
+        <p>HAVING</p>
+        <textarea [(ngModel)]="HavingCondition" rows="2" cols="30" placeholder="HAVING condition"></textarea>
+      </div>
+
+      <!-- Conditional ORDER BY Clause Display --> 
       <div *ngIf="orderByColumns.trim()">
         <p>ORDER BY</p>
-        <textarea [(ngModel)]="orderByColumns" rows="2" cols="30" placeholder="GROUP BY condition"></textarea>
+        <textarea [(ngModel)]="orderByColumns" rows="2" cols="30" placeholder="ORDER BY condition"></textarea>
       </div>
 
       <!-- Save Query Button -->

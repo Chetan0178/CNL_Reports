@@ -115,89 +115,82 @@ h3 {
   margin: 0 0 5px;
 }
 
+/* Container border and layout */
 .container-two {
-  margin-top: 2%;
-  border: 1px solid #ccc;
-  padding: 10px;
-  width: 100%;
-  overflow-x: auto;
-  display: flex;
-  flex-wrap: wrap; /* Allows items to wrap onto new lines */
-  gap: 20px; /* Spacing between the elements */
+  border: 2px solid #ccc;  /* Add border for container */
+  padding: 20px;
+  border-radius: 8px;
+  width: 95%;
+  margin-top: 20px;
 }
 
-/* Style for the individual sections (Alias-options, WHERE-options, etc.) */
-.Alias-options, 
-.WHERE-options, 
-.join-options, 
-.GROUP-BY-options, 
-.ORDER-BY-options {
-  flex: 1 1 45%; /* Allows the divs to grow and shrink, with a minimum width of 45% */
-  box-sizing: border-box; /* Makes sure padding and borders don't affect the width */
-}
-
-/* Additional customization for some divs to align on the left or right */
-.Alias-options, 
-.WHERE-options {
-  order: 1; /* These divs will stay at the start (left) */
-}
-
-.join-options, 
-.GROUP-BY-options, 
-.ORDER-BY-options{
-  order: 2; /* These divs will go to the right */
-}
-
-
+/* Alias-options section */
 .Alias-options {
+  margin-bottom: 20px;
+}
+
+/* Style for each options section like WHERE, JOIN, GROUP BY, and HAVING */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Table styling */
+table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
 
-.container-two td,
-.container-two th {
-  border: 1px solid #ccc;
-  padding: 4px;
+th, td {
+  padding: 8px;
   text-align: left;
+  border: 1px solid #ddd;
 }
 
-.container-two th {
-  background-color: #f0f0f0;
-  text-align: center;
-}
-
-.join-options .radio-group {
-  display: flex;
-  justify-content: space-between;
-}
-
-.join-options .left-side,
-.join-options .right-side {
-  display: flex;
-  flex-direction: column;
-}
-
-.join-options label {
-  margin-bottom: 8px;
-}
-
-.selected-field:hover .cancel-icon {
-  color: red;
-  cursor: pointer;
-  font-size: 18px;
-  display: inline-block;
+th {
+  background-color: #f4f4f4;
   font-weight: bold;
 }
 
-.input-wrapper {
-  display: flex;
-  align-items: center;
+td input, td select {
+  width: 95%;
+  padding: 5px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
-.container-two input[type="text"] {
-  padding: 5px;
-  width: 90%;
-  margin-left: 15px;
+/* Styling for radio button and its label to be on the same line */
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;  /* Allow wrapping in case of multiple items */
+  gap: 20px;  /* Space between radio button groups */
+}
+
+.radio-items {
+  display:inline;
+  align-items:center;  /* Align radio button and label in a row */
+}
+
+.radio-items input[type="radio"] {
+  margin-right: 5px;  /* Space between radio button and label */
+}
+
+/* Remove cancel icon (✖) styling */
+.cancel-icon {
+  cursor: pointer;
+  color: red;
+  font-weight: bold;
+}
+
+/* Responsiveness: Stack the options sections on small screens */
+@media (max-width: 768px) {
+  .options-grid {
+    grid-template-columns: 1fr;  /* Stack sections vertically on small screens */
+  }
 }
 
 .error-message {
