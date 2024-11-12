@@ -194,7 +194,7 @@
           <tbody>
             <tr>
               <td>
-                <input type="text" placeholder="Enter HAVING condition" [(ngModel)]="joinCondition" />
+                <input type="text" placeholder="Enter HAVING condition" [(ngModel)]="HavingCondition" />
               </td>
             </tr>
           </tbody>
@@ -230,7 +230,13 @@
         <textarea [(ngModel)]="groupByColumns" rows="2" cols="30" placeholder="GROUP BY condition"></textarea>
       </div>
 
-      <!-- Conditional ORDER BY Clause Display -->
+      <!-- Conditional WHERE Clause Display -->
+      <div *ngIf="HavingCondition.trim()">
+        <p>HAVING</p>
+        <textarea [(ngModel)]="HavingCondition" rows="2" cols="30" placeholder="HAVING condition"></textarea>
+      </div>
+
+      <!-- Conditional ORDER BY Clause Display --> 
       <div *ngIf="orderByColumns.trim()">
         <p>ORDER BY</p>
         <textarea [(ngModel)]="orderByColumns" rows="2" cols="30" placeholder="ORDER BY condition"></textarea>

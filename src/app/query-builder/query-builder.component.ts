@@ -16,6 +16,7 @@ export class QueryBuilderComponent {
   errorMessage: string | null = null;
   isLoading = false;
   whereCondition: string = '';  // Store WHERE input value
+  HavingCondition : string = ''; // Store HAVING input value
   joinCondition: string = '';  // Updated: will store selected relations here
   query: string = ''
   Q_Data: any[] = [];
@@ -188,6 +189,11 @@ export class QueryBuilderComponent {
     // Append WHERE clause if `whereCondition` is provided   
     if (this.groupByColumns.trim()) {
       baseQuery += ` GROUP BY ${this.groupByColumns}`;
+    } 
+
+    // Append HAVING clause if `HavingCondition` is provided   
+    if (this.HavingCondition.trim()) {
+      baseQuery += ` WHERE ${this.HavingCondition}`;
     } 
 
     this.generateOrderByClause();
