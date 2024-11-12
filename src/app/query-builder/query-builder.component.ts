@@ -34,6 +34,9 @@ export class QueryBuilderComponent {
   orderByColumns: string = '';  // Stores ORDER BY input
   orderDirection: string = 'ASC'; // Default to ASC
 
+  // New property to store selected aggregation functions
+  aggregationFunctions: { [columnName: string]: string } = {}; 
+
   // Array of join options
   joinOptions = [
     { value: 'INNER', label: 'Inner Join' },
@@ -225,7 +228,12 @@ export class QueryBuilderComponent {
   // Update the query display method to include the selected join type
   updateMainQueryDisplay() {
     const selectedColumns = this.getSelectedColumnsList().map((column) => {
-        return this.columnAliases[column] ? `${column} as ${this.columnAliases[column]}` : column;
+      const aggrFunc = this.aggregationFunctions[column] || '';
+      const alias = this.columnAliases[column];
+      if (aggrFunc) {
+        return alias ? `${aggrFunc}(${column}) as ${alias}` : `${aggrFunc}(${column})`;
+      }
+      return alias ? `${column} as ${alias}` : column;
     });
     this.selectedColumnsListForQuery = selectedColumns.join(', ');
       

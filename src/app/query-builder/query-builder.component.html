@@ -82,6 +82,7 @@
             <th>Action</th>
             <th>Field Name</th>
             <th>Alias</th>
+            <th>Aggre. Func.</th>
           </tr>
         </thead>
         <tbody *ngIf="getSelectedColumnsList().length > 0">
@@ -90,6 +91,17 @@
             <td><label>{{ field }} as</label></td>
             <td><input type="text" [value]="columnAliases[field] || ''" (input)="updateAlias(field, $event)"
                 placeholder="Alias (optional)" /></td>
+            <!-- New Aggre. Func. column with dropdown -->
+            <td>
+              <select [(ngModel)]="aggregationFunctions[field]" (change)="updateMainQueryDisplay()">
+                <option value="">None</option>
+                <option value="COUNT">COUNT()</option>
+                <option value="SUM">SUM()</option>
+                <option value="AVG">AVG()</option>
+                <option value="MIN">MIN()</option>
+                <option value="MAX">MAX()</option>
+              </select>
+            </td>
           </tr>
         </tbody>
       </table>
