@@ -253,10 +253,14 @@ export class QueryBuilderComponent {
 
   //Method for creatre order by statements
   generateOrderByClause() {
-    // Construct the ORDER BY clause by including each field's order direction
+    // Construct the ORDER BY clause, substituting aliases if present
     const orderByEntries = Object.keys(this.orderDirections)
       .filter(column => this.orderDirections[column]) // Only include columns with a specified order direction
-      .map(column => `${column} ${this.orderDirections[column]}`);
+      .map(column => {
+        // Check if an alias is available for the column, otherwise use the column name
+        const aliasOrColumnName = this.columnAliases[column] || column;
+        return `${aliasOrColumnName} ${this.orderDirections[column]}`;
+      });
     
     // Update orderByColumns to show in the main query section
     this.orderByColumns = orderByEntries.join(', ');
