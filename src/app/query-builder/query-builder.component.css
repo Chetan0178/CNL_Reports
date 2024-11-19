@@ -310,7 +310,6 @@ td input, td select {
   margin-top: 2%;
   height: 4in; /* Fixed height of 4 inches */
   overflow-y: auto; /* Scrollbar for overflow */
-  overflow-x: auto;
 }
 
 .query-result-container-table {
