@@ -1,0 +1,18 @@
+/* ang-mat.component.css */
+
+/* Style the Material button */
+button.mat-raised-button {
+    background-color: #4caf50; /* Custom green background */
+    color: white; /* Text color */
+    font-size: 10px; /* Font size */
+    padding: 12px 24px; /* Padding */
+    border-radius: 8px; /* Rounded corners */
+  }
+  
+  /* Change the message style */
+  .message {
+    font-size: 10px;
+    color: blue; /* Change text color to blue */
+    
+  }
+  

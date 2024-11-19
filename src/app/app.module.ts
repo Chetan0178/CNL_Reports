@@ -11,6 +11,10 @@ import { SalesPerformanceByCustomerComponent } from './sales-performance-by-cust
 import { HighSellingProductsComponent } from './high-selling-products/high-selling-products.component';
 import { QueryRunnerComponent } from './query-runner/query-runner.component';
 import { QueryBuilderComponent } from './query-builder/query-builder.component';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { AngMatComponent } from './ang-mat/ang-mat.component';
+import { MatButtonModule } from '@angular/material/button'; // Import the MatButtonModule
+
 
 @NgModule({
   declarations: [
@@ -20,16 +24,21 @@ import { QueryBuilderComponent } from './query-builder/query-builder.component';
     SalesPerformanceByCustomerComponent,
     HighSellingProductsComponent,
     QueryRunnerComponent,
-    QueryBuilderComponent
+    QueryBuilderComponent,
+    AngMatComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    MatButtonModule // Add MatButtonModule here
+
 
   ],
-  providers: [],
+  providers: [
+    provideAnimationsAsync()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

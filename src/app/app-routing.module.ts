@@ -6,6 +6,7 @@ import { SalesPerformanceByCustomerComponent } from './sales-performance-by-cust
 import { HighSellingProductsComponent } from './high-selling-products/high-selling-products.component';
 import { QueryRunnerComponent } from './query-runner/query-runner.component';
 import { QueryBuilderComponent } from './query-builder/query-builder.component';
+import { AngMatComponent } from './ang-mat/ang-mat.component';
 
 
 const routes: Routes = [
@@ -15,6 +16,7 @@ const routes: Routes = [
   { path : 'high_salling_product', component:HighSellingProductsComponent},
   { path : 'query_runner', component:QueryRunnerComponent },
   { path : 'query_builder', component:QueryBuilderComponent },
+  { path : 'ang_mat', component:AngMatComponent },
 
 ];
 

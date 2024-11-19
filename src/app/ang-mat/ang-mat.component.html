@@ -1,0 +1,8 @@
+<!-- ang-mat.component.html -->
+<div class="mat-container">
+    <button mat-raised-button color="primary" (click)="showMessage()">Click Me</button>
+    <div *ngIf="message" class="message">
+      {{ message }}
+    </div>
+  </div>
+  
