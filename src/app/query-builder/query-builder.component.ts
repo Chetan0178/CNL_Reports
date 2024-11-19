@@ -295,4 +295,5 @@ export class QueryBuilderComponent {
   removeColumnTable(tableName: string) {
     delete this.selectedColumns[tableName];
   }
+  
 }

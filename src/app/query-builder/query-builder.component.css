@@ -308,11 +308,15 @@ td input, td select {
 
 .query-result-container {
   margin-top: 2%;
+  height: 4in; /* Fixed height of 4 inches */
+  overflow-y: auto; /* Scrollbar for overflow */
+  overflow-x: auto;
 }
 
 .query-result-container-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed; /* Optional: ensures cells don't stretch too much */
 }
 
 .query-result-container-th {
@@ -323,6 +327,7 @@ td input, td select {
   transition: background-color 0.3s;
   padding: 12px;
   text-align: left;
+  z-index: 1; /* Ensure the header stays above rows */
 }
 
 .query-result-container-th:hover {
