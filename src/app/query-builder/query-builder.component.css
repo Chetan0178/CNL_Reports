@@ -505,3 +505,23 @@ tbody tr {
     width: 10%;
   }
 }
+
+.chart-creation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.chart-navbar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 800px;
+  gap: 10px;
+}
+
+canvas {
+  max-width: 100%;
+  height: auto !important;
+}

@@ -245,6 +245,8 @@
       <!-- Save Query Button -->
       <button (click)="openSaveModal()">Save Query</button>
       <button (click)="fetchData()">Execute Query</button>
+      <button type="button" class="btn btn-primary btn-lg" (click)="toggleChartCreation()">Draw Charts</button>
+
     </table>
     <!-- Modal for saving query -->
     <div *ngIf="queryRelatedCodeService.showModal" class="modal">
@@ -275,5 +277,38 @@
       </tbody>
     </table>
   </div>
+  
+  <!-- Chart Section -->
+<div class="chart-creation" *ngIf="showChartCreation">
+  <!-- Dropdowns for Chart Configuration -->
+  <div class="chart-navbar">
+    <label for="y-axis">Y-axis:</label>
+    <select id="y-axis" [(ngModel)]="yAxisSelection">
+      <option *ngFor="let field of headers" [value]="field">{{ field }}</option>
+    </select>
+
+    <label for="x-axis">X-axis:</label>
+    <select id="x-axis" [(ngModel)]="xAxisSelection">
+      <option *ngFor="let field of headers" [value]="field">{{ field }}</option>
+    </select>
+
+    <label for="chart-option">Chart Type:</label>
+    <select id="chart-option" [(ngModel)]="chartOptionSelection">
+      <option value="bar">Bar Chart</option>
+      <option value="line">Line Chart</option>
+      <option value="pie">Pie Chart</option>
+    </select>
+
+    <button (click)="generateChart()">Generate Chart</button>
+  </div>
+
+  <!-- Chart Display -->
+  <canvas #chartCanvas></canvas>
+</div>
+
+<div *ngIf="showChartCreation">
+  <p>Canvas is {{ chartCanvas ? 'ready' : 'not ready' }}!</p>
+  <canvas #chartCanvas></canvas>
+</div>
 
 </div>
