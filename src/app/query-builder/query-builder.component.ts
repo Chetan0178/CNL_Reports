@@ -72,12 +72,33 @@ export class QueryBuilderComponent implements OnInit{
 
     // Mock data for testing
     this.Q_Data = [
-      { product: 'Product A', sales: 100 },
-      { product: 'Product B', sales: 200 },
-      { product: 'Product C', sales: 150 }
+      {
+        "month_name": "May",
+        "total_revenue": 6700.0
+    },
+    {
+        "month_name": "June",
+        "total_revenue": 74800.0
+    },
+    {
+        "month_name": "July",
+        "total_revenue": 38000.0
+    },
+    {
+        "month_name": "August",
+        "total_revenue": 36500.0
+    },
+    {
+        "month_name": "September",
+        "total_revenue": 94500.0
+    },
+    {
+        "month_name": "October",
+        "total_revenue": 183980.0
+    }
     ];
-    this.headers = ['product', 'sales'];
-
+    this.headers = ['month_name', 'total_revenue'];
+    
     // Initialize a blank chart
     this.initChart();
   }
@@ -341,44 +362,41 @@ export class QueryBuilderComponent implements OnInit{
 
   // Generate chart based on selected options
   generateChart() {
-    // Ensure the canvas element is ready
     if (!this.chartCanvas || !this.chartCanvas.nativeElement) {
       console.error('Canvas element not found! Ensure the chart section is visible.');
       return;
     }
   
-    if (!this.xAxisSelection || !this.yAxisSelection || !this.chartOptionSelection) {
-      alert('Please select both X-axis and Y-axis fields and a chart type!');
+    if (!this.xAxisSelection || !this.chartOptionSelection) {
+      alert('Please select the X-axis field and a chart type!');
       return;
     }
   
     const xField = this.xAxisSelection;
-    const yField = this.yAxisSelection;
+    const yFields = this.yAxisSelection ? [this.yAxisSelection] : this.headers.filter(header => header !== xField); // Use selected Y-axis or all other fields
     const chartType = this.chartOptionSelection;
   
-    // Extract labels and data from Q_Data
-    const labels = this.Q_Data.map((row) => row[xField]);
-    const data = this.Q_Data.map((row) => row[yField]);
+    // Extract labels (X-axis) and datasets (data for each column)
+    const labels = this.Q_Data.map((row) => row[xField]); // X-axis labels
+    const datasets = yFields.map((field) => ({
+      label: field, // Dataset label
+      data: this.Q_Data.map((row) => row[field] || 0), // Data for this field
+      backgroundColor: chartType === 'pie' ? this.generateRandomColors(1)[0] : this.generateRandomColors(yFields.length)[0], // Unique color for each dataset
+      borderColor: 'rgba(75,192,192,1)', // Optional: border color
+      borderWidth: 1 // Optional: border width
+    }));
   
     // Destroy the existing chart if it exists
     if (this.chart) {
       this.chart.destroy();
     }
   
-    // Recreate the chart with the new type and data
+    // Recreate the chart with the appropriate configuration
     this.chart = new Chart(this.chartCanvas.nativeElement, {
       type: chartType as any,
       data: {
-        labels: labels,
-        datasets: [
-          {
-            label: `${yField} by ${xField}`,
-            data: data,
-            backgroundColor: chartType === 'pie' ? this.generateRandomColors(data.length) : 'rgba(75,192,192,0.6)',
-            borderColor: 'rgba(75,192,192,1)',
-            borderWidth: 1
-          }
-        ]
+        labels: labels, // X-axis labels
+        datasets: datasets // Data for the chart
       },
       options: {
         responsive: true,
@@ -386,10 +404,21 @@ export class QueryBuilderComponent implements OnInit{
           legend: {
             display: true
           }
+        },
+        scales: {
+          x: {
+            stacked: chartType === 'bar', // Enable stacking for bar charts
+            beginAtZero: true // Optional: start from zero
+          },
+          y: {
+            stacked: chartType === 'bar', // Enable stacking for bar charts
+            beginAtZero: true // Optional: start from zero
+          }
         }
       }
     });
   }
+  
   
 
   // Helper method to generate random colors for pie charts
