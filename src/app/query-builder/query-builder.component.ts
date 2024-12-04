@@ -1,14 +1,18 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { API_HOST } from '../../assets/api.config';
 import { QueryRelatedCodeService } from '../query-related-code.service';
+import { Chart, ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProvider';
 
 @Component({
   selector: 'app-query-builder',
   templateUrl: './query-builder.component.html',
   styleUrls: ['./query-builder.component.css']
 })
-export class QueryBuilderComponent {
+export class QueryBuilderComponent implements OnInit{
+  @ViewChild('chartCanvas') chartCanvas?: ElementRef<HTMLCanvasElement>;
+
   tables: string[] = [];
   selectedColumns: { [tableName: string]: string[] } = {};
   columnAliases: { [columnName: string]: string } = {};
@@ -46,6 +50,12 @@ export class QueryBuilderComponent {
     { value: 'CROSS', label: 'Cross Join' }
   ];
 
+  yAxisSelection: string | null = null; // Selected field for Y-axis
+  xAxisSelection: string | null = null; // Selected field for X-axis
+
+  chart!: Chart; // Chart instance
+  chartOptionSelection: string | null = 'bar'; // Default chart type
+
   constructor(private http: HttpClient, public queryRelatedCodeService: QueryRelatedCodeService) {}
 
   ngOnInit(): void {
@@ -60,6 +70,10 @@ export class QueryBuilderComponent {
     this.queryRelatedCodeService.headers$.subscribe(headers => {
       this.headers = headers;
     });
+
+
+    // Initialize a blank chart
+    this.initChart();
   }
 
   loadTables() {
@@ -295,5 +309,110 @@ export class QueryBuilderComponent {
   removeColumnTable(tableName: string) {
     delete this.selectedColumns[tableName];
   }
+
+  initChart() {
+    if (!this.chartCanvas || !this.chartCanvas.nativeElement) {
+      console.error('Canvas element is not defined!');
+      return;
+    }
+  
+    this.chart = new Chart(this.chartCanvas.nativeElement, {
+      type: 'bar', // Default type
+      data: {
+        labels: [], // Will be set dynamically
+        datasets: []
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          }
+        }
+      }
+    });
+  }
+
+  // Generate chart based on selected options
+  generateChart() {
+    if (!this.chartCanvas || !this.chartCanvas.nativeElement) {
+      console.error('Canvas element not found! Ensure the chart section is visible.');
+      return;
+    }
+  
+    if (!this.xAxisSelection || !this.chartOptionSelection) {
+      alert('Please select the X-axis field and a chart type!');
+      return;
+    }
+  
+    const xField = this.xAxisSelection;
+    const yFields = this.yAxisSelection ? [this.yAxisSelection] : this.headers.filter(header => header !== xField); // Use selected Y-axis or all other fields
+    const chartType = this.chartOptionSelection;
+  
+    // Extract labels (X-axis) and datasets (data for each column)
+    const labels = this.Q_Data.map((row) => row[xField]); // X-axis labels
+    const datasets = yFields.map((field) => ({
+      label: field, // Dataset label
+      data: this.Q_Data.map((row) => row[field] || 0), // Data for this field
+      backgroundColor: chartType === 'pie' ? this.generateRandomColors(1)[0] : this.generateRandomColors(yFields.length)[0], // Unique color for each dataset
+      borderColor: 'rgba(75,192,192,1)', // Optional: border color
+      borderWidth: 1 // Optional: border width
+    }));
+  
+    // Destroy the existing chart if it exists
+    if (this.chart) {
+      this.chart.destroy();
+    }
+  
+    // Recreate the chart with the appropriate configuration
+    this.chart = new Chart(this.chartCanvas.nativeElement, {
+      type: chartType as any,
+      data: {
+        labels: labels, // X-axis labels
+        datasets: datasets // Data for the chart
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            display: true
+          }
+        },
+        scales: {
+          x: {
+            stacked: chartType === 'bar', // Enable stacking for bar charts
+            beginAtZero: true // Optional: start from zero
+          },
+          y: {
+            stacked: chartType === 'bar', // Enable stacking for bar charts
+            beginAtZero: true // Optional: start from zero
+          }
+        }
+      }
+    });
+  }
+  
+  
+
+  // Helper method to generate random colors for pie charts
+  generateRandomColors(count: number): string[] {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+      colors.push(`hsl(${Math.random() * 360}, 70%, 70%)`);
+    }
+    return colors;
+  }
+
+  showChartCreation: boolean = false; // Toggle visibility of the chart section
+
+  toggleChartCreation() {
+    this.showChartCreation = !this.showChartCreation;
+  
+    // Delay chart initialization to ensure the canvas is rendered
+    if (this.showChartCreation) {
+      setTimeout(() => this.initChart(), 0); // Wait for the view to update
+    }
+  }
+  
   
 }
