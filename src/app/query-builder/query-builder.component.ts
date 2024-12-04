@@ -3,6 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { API_HOST } from '../../assets/api.config';
 import { QueryRelatedCodeService } from '../query-related-code.service';
 import { Chart, ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { dateTimestampProvider } from 'rxjs/internal/scheduler/dateTimestampProvider';
 
 @Component({
   selector: 'app-query-builder',
@@ -70,35 +71,7 @@ export class QueryBuilderComponent implements OnInit{
       this.headers = headers;
     });
 
-    // Mock data for testing
-    this.Q_Data = [
-      {
-        "month_name": "May",
-        "total_revenue": 6700.0
-    },
-    {
-        "month_name": "June",
-        "total_revenue": 74800.0
-    },
-    {
-        "month_name": "July",
-        "total_revenue": 38000.0
-    },
-    {
-        "month_name": "August",
-        "total_revenue": 36500.0
-    },
-    {
-        "month_name": "September",
-        "total_revenue": 94500.0
-    },
-    {
-        "month_name": "October",
-        "total_revenue": 183980.0
-    }
-    ];
-    this.headers = ['month_name', 'total_revenue'];
-    
+
     // Initialize a blank chart
     this.initChart();
   }
